@@ -119,7 +119,7 @@ function MarqueeRow({
   testimonials: typeof testimonials1;
   direction?: "forwards" | "reverse";
 }) {
-  const duration = "40s";
+  const duration = "60s";
   return (
     <div className="overflow-hidden" style={{ maskImage: "linear-gradient(to right, transparent, black 2rem, black calc(100% - 2rem), transparent)", WebkitMaskImage: "linear-gradient(to right, transparent, black 2rem, black calc(100% - 2rem), transparent)" }}>
       <div
