@@ -19,8 +19,8 @@ export default function Hero() {
       <div className="absolute inset-0 bg-[#182b68]/75" />
 
       {/* Content */}
-      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 py-12 md:py-16">
-        <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
+      <div className="relative z-10 w-full max-w-6xl mx-auto px-4 py-12 md:py-16">
+        <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-8 md:gap-12">
           {/* Left - Text & Buttons */}
           <div className="relative bg-[#fda600] px-8 py-10 md:px-12 md:py-14 rounded-lg md:rounded-xl max-w-xl shadow-xl">
             {/* Subtle texture pattern */}
@@ -56,7 +56,7 @@ export default function Hero() {
           </div>
 
           {/* Right - Admission Form */}
-          <div className="bg-[#182b68]/90 backdrop-blur-sm rounded-lg md:rounded-xl p-8 md:p-10 max-w-md mx-auto md:mx-0 border border-white/10">
+          <div className="bg-[#182b68]/90 backdrop-blur-sm rounded-lg md:rounded-xl p-8 md:p-10 max-w-md mx-auto md:ml-auto md:mr-0 border border-white/10">
             <h2 className="text-2xl md:text-3xl font-bold text-white uppercase tracking-wider text-center mb-8">
               Admission
             </h2>

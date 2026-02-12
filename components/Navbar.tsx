@@ -5,10 +5,10 @@ import Image from "next/image";
 
 const navLinks = [
   { label: "Home", href: "/" },
-  { label: "About us", href: "/about" },
-  { label: "Courses", href: "/courses" },
-  { label: "Fee Chart", href: "/fee-chart" },
-  { label: "Teacher", href: "/teacher" },
+  { label: "About us", href: "/Aboutus" },
+  { label: "Courses", href: "/Courses" },
+  { label: "Fee Chart", href: "/FeeChart" },
+  { label: "Teacher", href: "/Teachers" },
   { label: "Blogs", href: "/blogs" },
 ];
 
