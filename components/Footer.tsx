@@ -53,11 +53,11 @@ export default function Footer() {
       {/* Primary Content Area - Light background with rounded edges, overlaps blue bar */}
       <div className="relative px-1 sm:px-2 lg:px-3">
         <div className="max-w-7xl mx-auto">
-          <div className="bg-[#f8f8f8] rounded-[40px] pt-12 md:pt-16 pb-16 px-3 md:px-6 lg:px-8 shadow-lg relative z-10 mb-[-80px]">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-10">
+          <div className="bg-[#f8f8f8] rounded-2xl sm:rounded-[30px] md:rounded-[40px] pt-10 sm:pt-12 md:pt-16 pb-12 sm:pb-16 px-4 sm:px-5 md:px-6 lg:px-8 shadow-lg relative z-10 mb-[-60px] sm:mb-[-70px] md:mb-[-80px]">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10 lg:gap-10">
               {/* Column 1 - About Us */}
               <div className="space-y-4">
-                <h3 className="font-bold text-gray-900 text-lg mb-4">
+                <h3 className="font-bold text-gray-900 text-base sm:text-lg mb-3 sm:mb-4">
                   About Us
                 </h3>
                 <p className="text-gray-600 text-sm leading-relaxed">
@@ -80,7 +80,7 @@ export default function Footer() {
 
               {/* Column 2 - Latest Blog */}
               <div className="space-y-4">
-                <h3 className="font-bold text-gray-900 text-lg mb-4">
+                <h3 className="font-bold text-gray-900 text-base sm:text-lg mb-3 sm:mb-4">
                   Latest Blog
                 </h3>
                 <ul className="space-y-4">
@@ -128,7 +128,7 @@ export default function Footer() {
 
               {/* Column 3 - Contact Info */}
               <div className="space-y-4">
-                <h3 className="font-bold text-gray-900 text-lg mb-4">
+                <h3 className="font-bold text-gray-900 text-base sm:text-lg mb-3 sm:mb-4">
                   Contact Info
                 </h3>
                 <ul className="space-y-3">
@@ -221,7 +221,7 @@ export default function Footer() {
 
               {/* Column 4 - Quick Contact */}
               <div className="space-y-4">
-                <h3 className="font-bold text-gray-900 text-lg mb-4">
+                <h3 className="font-bold text-gray-900 text-base sm:text-lg mb-3 sm:mb-4">
                   Quick Contact
                 </h3>
                 <form className="space-y-3">
@@ -254,13 +254,13 @@ export default function Footer() {
       </div>
 
       {/* Bottom Bar - Dark blue background */}
-      <div className="bg-[#182b68] pt-24 pb-6 px-1 sm:px-2">
+      <div className="bg-[#182b68] pt-20 sm:pt-24 pb-4 sm:pb-6 px-4 sm:px-6">
         <div className="max-w-7xl mx-auto">
           {/* Dotted line separator */}
           <div className="border-t border-dotted border-white/30 mb-6"></div>
           
           <div className="flex flex-col sm:flex-row justify-center sm:justify-end items-center gap-2">
-            <p className="text-white/90 text-sm text-center sm:text-right">
+            <p className="text-white/90 text-xs sm:text-sm text-center sm:text-right">
               © 2025 - Aiza Quran Academy
             </p>
           </div>

@@ -17,14 +17,14 @@ export default function Box() {
           </div>
 
           {/* Content Grid */}
-          <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-8 p-8 md:p-12 lg:p-16">
+          <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 p-6 sm:p-8 md:p-12 lg:p-16">
             {/* Left Side - Text Content */}
             <div className="flex flex-col justify-center space-y-6">
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight">
+              <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-white leading-tight">
                 Al Saif Online Quran Academy
               </h1>
               
-              <p className="text-white/90 text-base md:text-lg leading-relaxed">
+              <p className="text-white/90 text-sm sm:text-base md:text-lg leading-relaxed">
                 With over 10 years of experience, we provide quality one-on-one 
                 Quran education online via Zoom, Google Meet and Microsoft Teams. 
                 Learn with expert tutors from the comfort of your home, focusing 

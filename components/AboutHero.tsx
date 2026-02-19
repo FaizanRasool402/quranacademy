@@ -4,7 +4,7 @@ import Image from "next/image";
 
 export default function AboutHero() {
   return (
-    <section className="relative min-h-[60vh] md:min-h-[70vh] w-full overflow-hidden flex items-center justify-center">
+    <section className="relative min-h-[50vh] sm:min-h-[60vh] md:min-h-[70vh] w-full overflow-hidden flex items-center justify-center">
       {/* Background Image */}
       <Image
         src="/images/bgg.png"
@@ -18,8 +18,8 @@ export default function AboutHero() {
       <div className="absolute inset-0 bg-[#182b68]/75" />
 
       {/* Content - Centered "About Us" */}
-      <div className="relative z-10 text-center px-4">
-        <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white">
+      <div className="relative z-10 text-center px-4 sm:px-6">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white">
           About Us
         </h1>
       </div>

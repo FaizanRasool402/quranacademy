@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Raleway } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
+import CTA from "@/components/CTA";
 import Footer from "@/components/Footer";
 
 const raleway = Raleway({
@@ -21,10 +22,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={raleway.variable}>
+    <html lang="en" className={`${raleway.variable} font-sans`}>
       <body className="font-sans antialiased">
         <Navbar />
         {children}
+        <CTA />
         <Footer />
       </body>
     </html>

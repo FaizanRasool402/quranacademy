@@ -5,7 +5,7 @@ const points = [
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar.",
     icon: (
       <svg
-        className="w-8 h-8 text-white"
+        className="w-6 h-6 sm:w-8 sm:h-8 text-white"
         fill="none"
         stroke="currentColor"
         viewBox="0 0 24 24"
@@ -25,7 +25,7 @@ const points = [
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar.",
     icon: (
       <svg
-        className="w-8 h-8 text-white"
+        className="w-6 h-6 sm:w-8 sm:h-8 text-white"
         fill="none"
         stroke="currentColor"
         viewBox="0 0 24 24"
@@ -45,7 +45,7 @@ const points = [
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar.",
     icon: (
       <svg
-        className="w-8 h-8 text-white"
+        className="w-6 h-6 sm:w-8 sm:h-8 text-white"
         fill="none"
         stroke="currentColor"
         viewBox="0 0 24 24"
@@ -63,21 +63,21 @@ const points = [
 
 export default function Points() {
   return (
-    <section className="w-full bg-white py-16 md:py-20 px-4">
+    <section className="w-full bg-white py-12 sm:py-16 md:py-20 px-4 sm:px-6">
       <div className="max-w-6xl mx-auto">
-        <div className="grid md:grid-cols-3 gap-10 md:gap-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 sm:gap-10 md:gap-12">
           {points.map((point) => (
             <div
               key={point.title}
               className="flex flex-col items-center text-center"
             >
-              <div className="w-20 h-20 rounded-full bg-[#182b68] border-4 border-white flex items-center justify-center shadow-lg mb-6">
+              <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-[#182b68] border-4 border-white flex items-center justify-center shadow-lg mb-4 sm:mb-6">
                 {point.icon}
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">
+              <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-2 sm:mb-3">
                 {point.title}
               </h3>
-              <p className="text-gray-600 text-[15px] leading-relaxed max-w-sm">
+              <p className="text-gray-600 text-sm sm:text-[15px] leading-relaxed max-w-sm mx-auto sm:mx-0">
                 {point.description}
               </p>
             </div>

@@ -38,10 +38,10 @@ const services = [
 
 export default function Services() {
   return (
-    <section className="w-full bg-white py-16 md:py-20 px-4">
+    <section className="w-full bg-white py-12 sm:py-16 md:py-20 px-4 sm:px-6">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
-        <div className="text-center mb-12 md:mb-16">
+        <div className="text-center mb-10 sm:mb-12 md:mb-16">
           <div className="flex items-center justify-center gap-3 mb-4">
             <div className="w-1 h-8 bg-[#182b68] rounded-full" />
             <span className="text-sm font-semibold text-gray-600 uppercase tracking-wider">
@@ -51,7 +51,7 @@ export default function Services() {
           <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
             Quran For All Academy Services
           </h2>
-          <p className="text-gray-600 text-[15px] leading-relaxed max-w-2xl mx-auto">
+          <p className="text-gray-600 text-sm sm:text-[15px] leading-relaxed max-w-2xl mx-auto px-2">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
             eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
             ad minim veniam, quis nostrud.
@@ -59,7 +59,7 @@ export default function Services() {
         </div>
 
         {/* Service Cards Grid */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
           {services.map((service) => (
             <article
               key={service.title}
@@ -97,7 +97,7 @@ export default function Services() {
               </div>
 
               {/* Headline */}
-              <h3 className="px-6 pb-4 text-center text-lg md:text-xl font-bold text-gray-900 leading-snug">
+              <h3 className="px-6 pb-4 text-center text-base sm:text-lg md:text-xl font-bold text-gray-900 leading-snug">
                 {service.title}
               </h3>
 
