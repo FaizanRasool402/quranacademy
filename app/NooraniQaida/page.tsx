@@ -1,11 +1,15 @@
 import NooraniQaidaHero from "@/components/NooraniQaidaHero";
-import HomeAbout from "@/components/HomeAbout";
+import NoraniQaidaOutline from "@/components/NoraniQaidaOutline";
+import NoraniBenefits from "@/components/NoraniBenefits";
+// import HomeAbout from "@/components/HomeAbout";
 
 export default function NooraniQaidaPage() {
   return (
     <div>
       <NooraniQaidaHero />
-      <HomeAbout />
+      <NoraniQaidaOutline />
+      <NoraniBenefits />
+      {/* <HomeAbout /> */}
     </div>
   );
 }
