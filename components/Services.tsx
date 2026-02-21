@@ -52,9 +52,7 @@ export default function Services() {
             Quran For All Academy Services
           </h2>
           <p className="text-gray-600 text-sm sm:text-[15px] leading-relaxed max-w-2xl mx-auto px-2">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-            ad minim veniam, quis nostrud.
+          At Aiza Quran Academy, we offer a wide range of Quran and Islamic courses designed to guide learners of all ages toward a deeper connection with their faith.
           </p>
         </div>
 

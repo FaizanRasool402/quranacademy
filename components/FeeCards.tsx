@@ -4,106 +4,75 @@ import Link from "next/link";
 
 const usaCanadaPlans = [
   {
-    title: "Starter",
-    price: 30,
+    title: "FREE",
+    price: 0,
     featured: false,
     features: [
-      "3 Days Per Week",
-      "30 Minute Class",
-      "12 Classes Per Month",
-      "First Student Fee 30$",
-      "2nd Student Fee 25$",
+      "Lecture Duration: 30 Minutes",
+      "Trial Duration: One Week",
+      "Admission: Free",
+      "2nd Student: 10% Off",
     ],
   },
   {
-    title: "Starter",
-    price: 50,
+    title: "3 DAYS / WEEK",
+    price: 40,
     featured: true,
     features: [
-      "4 Days Per Week",
-      "30 Minute Class",
-      "16 Classes Per Month",
-      "First Student Fee 55$",
-      "2nd Student Fee 50$",
+      "Lecture Duration: 30 Minutes",
+      "Days: 3 Per Week",
+      "Admission: Free",
+      "2nd Student: 10% Off",
     ],
   },
   {
-    title: "Starter",
-    price: 60,
+    title: "5 DAYS / WEEK",
+    price: 55,
     featured: false,
     features: [
-      "5 Days Per Week",
-      "30 Minute Class",
-      "20 Classes Per Month",
-      "First Student Fee 60$",
-      "2nd Student Fee 55$",
-    ],
-  },
-  {
-    title: "Starter",
-    price: 25,
-    featured: false,
-    features: [
-      "Weekend Classes",
-      "30 Minute Class",
-      "08 Classes Per Month",
-      "First Student Fee 25$",
-      "2nd Student Fee 20$",
+      "Lecture Duration: 30 Minutes",
+      "Days: 5 Per Week",
+      "Admission: Free",
+      "2nd Student: 10% Off",
     ],
   },
 ];
 
 const ukEuropePlans = [
   {
-    title: "Starter",
-    price: 20,
-    priceLabel: "€20",
+    title: "FREE",
+    price: 0,
+    priceLabel: "£0",
     featured: false,
     features: [
-      "3 Days Per Week",
-      "30 Minute Class",
-      "12 Classes Per Month",
-      "First Student Fee 25€",
-      "2nd Student Fee 20€",
+      "Lecture Duration: 30 Minutes",
+      "Trial Duration: One Week",
+      "Admission: Free",
+      "2nd Student: 10% Off",
     ],
   },
   {
-    title: "Starter",
-    price: 30,
-    priceLabel: "€30",
+    title: "3 DAYS / WEEK",
+    price: 32,
+    priceLabel: "£32",
     featured: true,
     features: [
-      "4 Days Per Week",
-      "30 Minute Class",
-      "16 Classes Per Month",
-      "First Student Fee 30€",
-      "2nd Student Fee 25€",
+      "Lecture Duration: 30 Minutes",
+      "Days: 3 Per Week",
+      "Admission: Free",
+      "2nd Student: 10% Off",
     ],
   },
   {
-    title: "Starter",
-    price: 40,
-    priceLabel: "€40",
+    title: "5 DAYS / WEEK",
+    price: 45,
+    priceLabel: "£45",
     featured: false,
     features: [
-      "5 Days Per Week",
-      "30 Minute Class",
-      "20 Classes Per Month",
-      "First Student Fee 40€",
-      "2nd Student Fee 35€",
-    ],
-  },
-  {
-    title: "Starter",
-    price: 20,
-    priceLabel: "€20",
-    featured: false,
-    features: [
-      "Weekend Classes",
-      "30 Minute Class",
-      "08 Classes Per Month",
-      "First Student Fee 20€",
-      "2nd Student Fee 18€",
+      "Lecture Duration: 30 Minutes",
+      "Days: 5 Per Week",
+      "Admission: Free",
+      "2nd Student: 10% Off",
     ],
   },
 ];
@@ -120,7 +89,7 @@ function FeeCardGrid({
   }>;
 }) {
   return (
-    <div className="grid grid-cols-1 min-[480px]:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
+    <div className="grid grid-cols-1 min-[480px]:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
       {plans.map((plan, index) => (
             <div
               key={`${plan.price}-${plan.features[0]}-${index}`}
@@ -199,7 +168,7 @@ export default function FeeCards() {
         {/* USA & Canada Section */}
         <div>
           <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-[#182b68] text-center mb-8 sm:mb-10 md:mb-12 lg:mb-16 px-2">
-            For USA & Canada Monthly Fee
+            Fee (Hadiya) of the Quran Courses
           </h2>
           <FeeCardGrid plans={usaCanadaPlans} />
         </div>
@@ -207,7 +176,7 @@ export default function FeeCards() {
         {/* UK & Europe Section */}
         <div>
           <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-[#182b68] text-center mb-8 sm:mb-10 md:mb-12 lg:mb-16 px-2">
-            For UK and Europe Monthly Fee
+            United Kingdom Fee of the Quran Courses
           </h2>
           <FeeCardGrid plans={ukEuropePlans} />
         </div>

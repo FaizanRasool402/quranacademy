@@ -2,7 +2,7 @@ const points = [
   {
     title: "Professional Teachers",
     description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar.",
+      "Our experienced teachers are dedicated to providing high-quality Quran education with proper Tajweed and Islamic knowledge.",
     icon: (
       <svg
         className="w-6 h-6 sm:w-8 sm:h-8 text-white"
@@ -22,7 +22,7 @@ const points = [
   {
     title: "Online Classes",
     description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar.",
+      "Learn Quran from the comfort of your home through our live one-on-one online sessions, available seven days a week at flexible timings.",
     icon: (
       <svg
         className="w-6 h-6 sm:w-8 sm:h-8 text-white"
@@ -42,7 +42,7 @@ const points = [
   {
     title: "Female Teachers",
     description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar.",
+      "We offer dedicated female Quran teachers for sisters and children, ensuring a comfortable, respectful, and nurturing learning environment.",
     icon: (
       <svg
         className="w-6 h-6 sm:w-8 sm:h-8 text-white"

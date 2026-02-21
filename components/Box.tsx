@@ -21,7 +21,7 @@ export default function Box() {
             {/* Left Side - Text Content */}
             <div className="flex flex-col justify-center space-y-6">
               <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-white leading-tight">
-                Al Saif Online Quran Academy
+                Aiza Quran Academy
               </h1>
               
               <p className="text-white/90 text-sm sm:text-base md:text-lg leading-relaxed">

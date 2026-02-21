@@ -20,12 +20,10 @@ export default function HomeAbout() {
               Best Online Quran Academy
             </h2>
             <p className="text-gray-700 text-sm sm:text-[15px] leading-relaxed mb-4">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit
-              tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.
+            Aiza Quran Academy is a trusted online platform dedicated to teaching the Quran with proper Tajweed and Islamic values. Our qualified teachers provide personalized one-on-one classes for students of all ages and levels.
             </p>
             <p className="text-gray-700 text-sm sm:text-[15px] leading-relaxed mb-6 sm:mb-8">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit
-              tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.
+            We offer flexible scheduling, female teachers for sisters and children, and a supportive learning environment. Our goal is to make Quran education accessible, authentic, and effective for every Muslim around the world.
             </p>
             <Link
               href="/contact"
