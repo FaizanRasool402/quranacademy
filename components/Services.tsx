@@ -5,34 +5,34 @@ import Link from "next/link";
 
 const services = [
   {
-    title: "Online Quran Recitation",
-    tag: "Popular",
-    image: "/images/choto.jpg",
-  },
-  {
     title: "Noorani Qaida Online",
-    tag: "Trending",
-    image: "/images/choto.jpg",
-  },
-  {
-    title: "Quran Memorization",
-    tag: "Featured",
-    image: "/images/choto.jpg",
+    tag: "Popular",
+    image: "/images/norani.jpg",
+    href: "/NooraniQaida",
   },
   {
     title: "Quran Translation",
-    tag: "Popular",
-    image: "/images/choto.jpg",
-  },
-  {
-    title: "Tajweed Classes",
     tag: "Trending",
-    image: "/images/choto.jpg",
+    image: "/images/quran.webp",
+    href: "/QuranTranslation",
   },
   {
-    title: "Online Quran Classes",
+    title: "Quran Tajweed",
     tag: "Featured",
-    image: "/images/choto.jpg",
+    image: "/images/tajweed.png",
+    href: "/QuranTajweed",
+  },
+  {
+    title: "Quran Memorization",
+    tag: "Popular",
+    image: "/images/Memorization.jpg",
+    href: "/QuranMemorization",
+  },
+  {
+    title: "Quran Tafsir",
+    tag: "Trending",
+    image: "/images/tafsir.jpg",
+    href: "/QuranTafsir",
   },
 ];
 
@@ -102,7 +102,7 @@ export default function Services() {
               {/* Read more Button */}
               <div className="px-6 pb-6 flex justify-center">
                 <Link
-                  href="/courses"
+                  href={service.href}
                   className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#182b68] text-white font-semibold text-sm hover:opacity-90 transition-opacity"
                 >
                   Read more

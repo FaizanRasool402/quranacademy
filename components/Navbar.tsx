@@ -74,23 +74,17 @@ export default function Navbar() {
           ))}
           {/* Courses Dropdown */}
           <div className="relative group">
-            <button
-              type="button"
+            <Link
+              href="/Courses"
               className="text-[15px] font-medium text-black hover:text-[#6b4c9a] transition-colors flex items-center gap-1"
             >
               Courses
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
               </svg>
-            </button>
+            </Link>
             <div className="absolute top-full left-0 pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
               <div className="bg-white rounded-lg shadow-lg border border-gray-100 py-2 min-w-[220px]">
-                <Link
-                  href="/Courses"
-                  className="block px-4 py-2 text-[15px] text-gray-700 hover:bg-gray-50 hover:text-[#182b68] transition-colors"
-                >
-                  All Courses
-                </Link>
                 {coursesDropdown.map((item) => (
                   <Link
                     key={item.href}
@@ -139,25 +133,26 @@ export default function Navbar() {
             ))}
             {/* Courses Accordion */}
             <div>
-              <button
-                type="button"
-                onClick={() => setCoursesOpen(!coursesOpen)}
-                className="w-full py-3 px-4 rounded-lg text-[15px] font-medium text-gray-800 hover:bg-gray-50 transition-colors flex items-center justify-between"
-              >
-                Courses
-                <svg className={`w-4 h-4 transition-transform ${coursesOpen ? "rotate-180" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
+              <div className="flex items-center">
+                <Link
+                  href="/Courses"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex-1 py-3 px-4 rounded-lg text-[15px] font-medium text-gray-800 hover:bg-gray-50 transition-colors"
+                >
+                  Courses
+                </Link>
+                <button
+                  type="button"
+                  onClick={() => setCoursesOpen(!coursesOpen)}
+                  className="p-3 rounded-lg hover:bg-gray-50 transition-colors"
+                >
+                  <svg className={`w-4 h-4 transition-transform ${coursesOpen ? "rotate-180" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+              </div>
               {coursesOpen && (
                 <div className="pl-4 pb-2 flex flex-col gap-1">
-                  <Link
-                    href="/Courses"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="py-2 px-4 rounded-lg text-sm text-gray-600 hover:text-[#182b68]"
-                  >
-                    All Courses
-                  </Link>
                   {coursesDropdown.map((item) => (
                     <Link
                       key={item.href}

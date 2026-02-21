@@ -11,14 +11,13 @@ export default function CTA() {
           <div className="w-1 sm:w-1.5 shrink-0 bg-white rounded-full min-h-[60px] sm:min-h-[80px] self-stretch" />
           <div>
             <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-white leading-tight">
-              Join Aiza Quran Academy & Learn
-              <span className="block text-white text-xl sm:text-2xl md:text-3xl mt-1">
+            Join Aiza Quran Academy & Start Your Journey
+              {/* <span className="block text-white text-xl sm:text-2xl md:text-3xl mt-1">
                 Noorani Qaida
-              </span>
+              </span> */}
             </h2>
             <p className="text-white/90 text-xs sm:text-sm md:text-base mt-2 sm:mt-3 font-normal">
-              Learn to read the Noorani Qaida with proper pronunciation through
-              expert guidance. Enroll now!
+            Begin your Quran learning journey today with expert teachers, flexible timings, and personalized classes from the comfort of your home.
             </p>
           </div>
         </div>

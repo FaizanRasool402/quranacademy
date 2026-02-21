@@ -6,6 +6,36 @@ import Link from "next/link";
 export default function Hero() {
   return (
     <section className="relative min-h-[85vh] sm:min-h-[90vh] w-full overflow-hidden flex items-center">
+      <style jsx>{`
+        @keyframes slideFromLeft {
+          0% {
+            opacity: 0;
+            transform: translateX(-100px);
+          }
+          100% {
+            opacity: 1;
+            transform: translateX(0);
+          }
+        }
+        @keyframes slideFromRight {
+          0% {
+            opacity: 0;
+            transform: translateX(100px);
+          }
+          100% {
+            opacity: 1;
+            transform: translateX(0);
+          }
+        }
+        .animate-from-left {
+          animation: slideFromLeft 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+        }
+        .animate-from-right {
+          animation: slideFromRight 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.2s forwards;
+          opacity: 0;
+        }
+      `}</style>
+
       {/* Background Image */}
       <Image
         src="/images/bg.jpg"
@@ -22,7 +52,7 @@ export default function Hero() {
       <div className="relative z-10 w-full max-w-6xl mx-auto px-4 sm:px-6 py-10 sm:py-12 md:py-16">
         <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-8 md:gap-12">
           {/* Left - Text & Buttons */}
-          <div className="relative bg-[#fda600] px-5 py-8 sm:px-8 sm:py-10 md:px-12 md:py-14 rounded-lg md:rounded-xl max-w-xl shadow-xl">
+          <div className="animate-from-left relative bg-[#fda600] px-5 py-8 sm:px-8 sm:py-10 md:px-12 md:py-14 rounded-lg md:rounded-xl max-w-xl shadow-xl">
             {/* Subtle texture pattern */}
             <div
               className="absolute inset-0 rounded-lg md:rounded-xl opacity-10"
@@ -56,7 +86,7 @@ export default function Hero() {
           </div>
 
           {/* Right - Admission Form */}
-          <div className="bg-[#182b68]/90 backdrop-blur-sm rounded-lg md:rounded-xl p-6 sm:p-8 md:p-10 max-w-md mx-auto md:ml-auto md:mr-0 border border-white/10 w-full">
+          <div className="animate-from-right bg-[#182b68]/90 backdrop-blur-sm rounded-lg md:rounded-xl p-6 sm:p-8 md:p-10 max-w-md mx-auto md:ml-auto md:mr-0 border border-white/10 w-full">
             <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-white uppercase tracking-wider text-center mb-6 sm:mb-8">
               Admission
             </h2>
