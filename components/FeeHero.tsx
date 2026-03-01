@@ -19,9 +19,15 @@ export default function FeeHero() {
 
       {/* Content - Centered "Fee Chart" */}
       <div className="relative z-10 text-center px-4">
+        <div className="inline-flex items-center gap-3 text-xs font-semibold tracking-[0.3em] uppercase text-[#fda600] mb-4 sm:mb-6">
+          <span className="block w-8 sm:w-10 h-px bg-[#fda600] opacity-60" />
+          Aiza Quran Academy
+          <span className="block w-8 sm:w-10 h-px bg-[#fda600] opacity-60" />
+        </div>
         <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white">
           Fee Chart
         </h1>
+        <div className="w-16 h-0.5 mx-auto mt-4 sm:mt-6 rounded-full" style={{ background: 'linear-gradient(90deg, transparent, #fda600, transparent)' }} />
       </div>
     </section>
   );

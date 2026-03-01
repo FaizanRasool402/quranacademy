@@ -4,6 +4,7 @@ import Points from "@/components/Points";
 import HomeAbout from "@/components/HomeAbout";
 import Services from "@/components/Services";
 import Testimonials from "@/components/Testimonials";
+import Download from "@/components/Download";
 
 export default function Home() {
   return (
@@ -14,6 +15,7 @@ export default function Home() {
       <HomeAbout />
       <Services />
       <Testimonials />
+      <Download />
     </div>
   );
 }

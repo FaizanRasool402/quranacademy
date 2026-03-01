@@ -9,76 +9,33 @@ const StarIcon = () => (
   </svg>
 );
 
-// Testimonial data
 const testimonials1 = [
   {
     id: 1,
     rating: 5,
-    text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare.",
-    name: "Name Surname",
-    position: "Position, Company name",
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=1",
+    text: "Aiza Quran Academy has been a blessing for my children. The teachers are incredibly patient and knowledgeable. My son memorized his first Surah within just two weeks!",
+    name: "Fatima Al-Rashid",
   },
   {
     id: 2,
     rating: 5,
-    text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare.",
-    name: "Name Surname",
-    position: "Position, Company name",
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=2",
+    text: "I enrolled my daughter in Aiza Quran Academy and the results are amazing. She now reads the Quran with proper Tajweed. Highly recommend this academy to every Muslim family.",
+    name: "Usman Malik",
   },
   {
     id: 3,
     rating: 5,
-    text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare.",
-    name: "Name Surname",
-    position: "Position, Company name",
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=3",
+    text: "The online classes at Aiza Quran Academy are very well structured. The tutor is always on time, very professional, and makes learning the Quran enjoyable for kids.",
+    name: "Ayesha Siddiqui",
   },
   {
     id: 4,
     rating: 5,
-    text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare.",
-    name: "Name Surname",
-    position: "Position, Company name",
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=4",
+    text: "Alhamdulillah, my son has improved so much since joining Aiza Quran Academy. The one-on-one sessions are really effective. May Allah reward the teachers for their efforts.",
+    name: "Hassan Ahmed",
   },
 ];
 
-const testimonials2 = [
-  {
-    id: 5,
-    rating: 5,
-    text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare.",
-    name: "Name Surname",
-    position: "Position, Company name",
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=5",
-  },
-  {
-    id: 6,
-    rating: 5,
-    text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare.",
-    name: "Name Surname",
-    position: "Position, Company name",
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=6",
-  },
-  {
-    id: 7,
-    rating: 5,
-    text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare.",
-    name: "Name Surname",
-    position: "Position, Company name",
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=7",
-  },
-  {
-    id: 8,
-    rating: 5,
-    text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare.",
-    name: "Name Surname",
-    position: "Position, Company name",
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=8",
-  },
-];
 
 function TestimonialCard({
   testimonial,
@@ -95,18 +52,10 @@ function TestimonialCard({
       <p className="text-gray-700 text-sm mb-6 leading-relaxed">
         &quot;{testimonial.text}&quot;
       </p>
-      <div className="flex items-center gap-3">
-        <img
-          src={testimonial.avatar}
-          alt={testimonial.name}
-          className="w-12 h-12 rounded-full object-cover"
-        />
-        <div>
-          <h4 className="font-semibold text-gray-900 text-sm">
-            {testimonial.name}
-          </h4>
-          <p className="text-gray-500 text-xs">{testimonial.position}</p>
-        </div>
+      <div>
+        <h4 className="font-semibold text-gray-900 text-sm">
+          {testimonial.name}
+        </h4>
       </div>
     </div>
   );
@@ -154,10 +103,9 @@ export default function Testimonials() {
             </p>
           </div>
 
-          {/* Marquee Rows */}
+          {/* Marquee Row */}
           <div className="flex flex-col gap-6">
             <MarqueeRow testimonials={testimonials1} direction="forwards" />
-            <MarqueeRow testimonials={testimonials2} direction="reverse" />
           </div>
         </div>
       </section>
