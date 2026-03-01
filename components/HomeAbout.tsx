@@ -2,50 +2,91 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useRef } from "react";
 
 export default function HomeAbout() {
-  return (
-    <section className="w-full bg-neutral-100 py-12 sm:py-16 md:py-20 px-4 sm:px-6">
-      <div className="max-w-6xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-12 md:gap-16 items-center">
-          {/* Left - Text */}
-          <div>
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-1 h-10 bg-[#182b68] rounded-full" />
-              <span className="text-sm font-semibold text-gray-700 uppercase tracking-wider">
-                About Us
-              </span>
-            </div>
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 mb-6">
-              Best Online Quran Academy
-            </h2>
-            <p className="text-gray-700 text-sm sm:text-[15px] leading-relaxed mb-4">
-            Aiza Quran Academy is a trusted online platform dedicated to teaching the Quran with proper Tajweed and Islamic values. Our qualified teachers provide personalized one-on-one classes for students of all ages and levels.
-            </p>
-            <p className="text-gray-700 text-sm sm:text-[15px] leading-relaxed mb-6 sm:mb-8">
-            We offer flexible scheduling, female teachers for sisters and children, and a supportive learning environment. Our goal is to make Quran education accessible, authentic, and effective for every Muslim around the world.
-            </p>
-            <Link
-              href="/Contactus"
-              className="inline-block px-6 py-3 rounded-md bg-[#182b68] text-white font-semibold text-sm uppercase tracking-wider hover:opacity-90 transition-opacity"
-            >
-              Contact Us
-            </Link>
-          </div>
+  const leftRef = useRef<HTMLDivElement>(null);
+  const rightRef = useRef<HTMLDivElement>(null);
 
-          {/* Right - Image */}
-          <div className="relative rounded-lg overflow-hidden shadow-xl aspect-[4/3] max-h-[300px] sm:max-h-[350px] md:max-h-[400px] order-first md:order-none">
-            <Image
-              src="/images/choto.jpg"
-              alt="Student reading Quran"
-              fill
-              className="object-cover"
-              sizes="(max-width: 768px) 100vw, 50vw"
-              priority={false}
-            />
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("animate-in");
+          }
+        });
+      },
+      { threshold: 0.2 }
+    );
+
+    if (leftRef.current) observer.observe(leftRef.current);
+    if (rightRef.current) observer.observe(rightRef.current);
+
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <>
+      <style>{`
+        .slide-from-left {
+          opacity: 0;
+          transform: translateX(-60px);
+          transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+        }
+        .slide-from-right {
+          opacity: 0;
+          transform: translateX(60px);
+          transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+        }
+        .slide-from-left.animate-in,
+        .slide-from-right.animate-in {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      `}</style>
+      <section className="w-full bg-neutral-100 py-12 sm:py-16 md:py-20 px-4 sm:px-6 overflow-hidden">
+        <div className="max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-12 md:gap-16 items-center">
+            {/* Left - Text */}
+            <div ref={leftRef} className="slide-from-left">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-1 h-10 bg-[#182b68] rounded-full" />
+                <span className="text-sm font-semibold text-gray-700 uppercase tracking-wider">
+                  About Us
+                </span>
+              </div>
+              <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 mb-6">
+                Best Online Quran Academy
+              </h2>
+              <p className="text-gray-700 text-sm sm:text-[15px] leading-relaxed mb-4">
+              Aiza Quran Academy is a trusted online platform dedicated to teaching the Quran with proper Tajweed and Islamic values. Our qualified teachers provide personalized one-on-one classes for students of all ages and levels.
+              </p>
+              <p className="text-gray-700 text-sm sm:text-[15px] leading-relaxed mb-6 sm:mb-8">
+              We offer flexible scheduling, female teachers for sisters and children, and a supportive learning environment. Our goal is to make Quran education accessible, authentic, and effective for every Muslim around the world.
+              </p>
+              <Link
+                href="/Contactus"
+                className="inline-block px-6 py-3 rounded-md bg-[#182b68] text-white font-semibold text-sm uppercase tracking-wider hover:opacity-90 transition-opacity"
+              >
+                Contact Us
+              </Link>
+            </div>
+
+            {/* Right - Image */}
+            <div ref={rightRef} className="slide-from-right relative rounded-lg overflow-hidden shadow-xl aspect-[4/3] max-h-[300px] sm:max-h-[350px] md:max-h-[400px] order-first md:order-none">
+              <Image
+                src="/images/choto.jpg"
+                alt="Student reading Quran"
+                fill
+                className="object-cover"
+                sizes="(max-width: 768px) 100vw, 50vw"
+                priority={false}
+              />
+            </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </>
   );
 }

@@ -1,3 +1,7 @@
+"use client";
+
+import { useEffect, useRef } from "react";
+
 const points = [
   {
     title: "Professional Teachers",
@@ -62,28 +66,66 @@ const points = [
 ];
 
 export default function Points() {
+  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("animate-in");
+          }
+        });
+      },
+      { threshold: 0.2 }
+    );
+
+    cardRefs.current.forEach((ref) => {
+      if (ref) observer.observe(ref);
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <section className="w-full bg-white py-12 sm:py-16 md:py-20 px-4 sm:px-6">
-      <div className="max-w-6xl mx-auto">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 sm:gap-10 md:gap-12">
-          {points.map((point) => (
-            <div
-              key={point.title}
-              className="flex flex-col items-center text-center"
-            >
-              <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-[#182b68] border-4 border-white flex items-center justify-center shadow-lg mb-4 sm:mb-6">
-                {point.icon}
+    <>
+      <style>{`
+        .point-card {
+          opacity: 0;
+          transform: translateY(40px);
+          transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .point-card.animate-in {
+          opacity: 1;
+          transform: translateY(0);
+        }
+        .point-card:nth-child(1) { transition-delay: 0s; }
+        .point-card:nth-child(2) { transition-delay: 0.2s; }
+        .point-card:nth-child(3) { transition-delay: 0.4s; }
+      `}</style>
+      <section className="w-full bg-white py-12 sm:py-16 md:py-20 px-4 sm:px-6">
+        <div className="max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 sm:gap-10 md:gap-12">
+            {points.map((point, index) => (
+              <div
+                key={point.title}
+                ref={(el) => { cardRefs.current[index] = el; }}
+                className="point-card flex flex-col items-center text-center"
+              >
+                <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-[#182b68] border-4 border-white flex items-center justify-center shadow-lg mb-4 sm:mb-6">
+                  {point.icon}
+                </div>
+                <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-2 sm:mb-3">
+                  {point.title}
+                </h3>
+                <p className="text-gray-600 text-sm sm:text-[15px] leading-relaxed max-w-sm mx-auto sm:mx-0">
+                  {point.description}
+                </p>
               </div>
-              <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-2 sm:mb-3">
-                {point.title}
-              </h3>
-              <p className="text-gray-600 text-sm sm:text-[15px] leading-relaxed max-w-sm mx-auto sm:mx-0">
-                {point.description}
-              </p>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </>
   );
 }
