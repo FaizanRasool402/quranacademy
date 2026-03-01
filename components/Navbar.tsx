@@ -110,7 +110,7 @@ export default function Navbar() {
 
         {/* Contact Button - Desktop */}
         <Link
-          href="/contact"
+          href="/Contactus"
           className="hidden md:inline-flex shrink-0 px-5 md:px-6 py-2 md:py-2.5 rounded-md bg-[#182b68] text-white font-semibold text-sm md:text-[15px] shadow-[0_4px_14px_rgba(24,43,104,0.4)] hover:opacity-90 transition-colors"
         >
           Contact
@@ -167,7 +167,7 @@ export default function Navbar() {
               )}
             </div>
             <Link
-              href="/contact"
+              href="/Contactus"
               onClick={() => setMobileMenuOpen(false)}
               className="mt-2 mx-4 py-3 rounded-lg bg-[#182b68] text-white font-semibold text-[15px] text-center hover:opacity-90 transition-opacity"
             >
