@@ -26,7 +26,7 @@ export default function HomeAbout() {
             We offer flexible scheduling, female teachers for sisters and children, and a supportive learning environment. Our goal is to make Quran education accessible, authentic, and effective for every Muslim around the world.
             </p>
             <Link
-              href="/contact"
+              href="/Contactus"
               className="inline-block px-6 py-3 rounded-md bg-[#182b68] text-white font-semibold text-sm uppercase tracking-wider hover:opacity-90 transition-opacity"
             >
               Contact Us

@@ -70,13 +70,13 @@ export default function Hero() {
               </p>
               <div className="flex flex-wrap gap-3 sm:gap-4">
                 <Link
-                  href="/admission"
+                  href="/Contactus"
                   className="inline-block px-5 py-2.5 sm:px-6 sm:py-3 rounded-md bg-[#182b68] text-white font-semibold text-sm sm:text-[15px] hover:opacity-90 transition-opacity"
                 >
                   Get Admission
                 </Link>
                 <Link
-                  href="/contact"
+                  href="/Contactus"
                   className="inline-block px-5 py-2.5 sm:px-6 sm:py-3 rounded-md bg-[#182b68] text-white font-semibold text-sm sm:text-[15px] hover:opacity-90 transition-opacity"
                 >
                   Contact

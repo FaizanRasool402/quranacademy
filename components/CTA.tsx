@@ -24,7 +24,7 @@ export default function CTA() {
 
         {/* Right - CTA Button */}
         <Link
-          href="/NooraniQaida"
+          href="/Contactus"
           className="shrink-0 w-full sm:w-auto text-center px-6 sm:px-8 py-3 sm:py-3.5 bg-white text-[#182b68] font-bold text-xs sm:text-sm uppercase tracking-wide rounded-full shadow-[0_4px_14px_rgba(0,0,0,0.2)] border-2 border-amber-300/50 hover:bg-gray-100 transition-colors"
         >
           Enroll Now

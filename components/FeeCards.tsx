@@ -145,7 +145,7 @@ function FeeCardGrid({
               {/* Button */}
               <div className="px-4 sm:px-6 pb-5 sm:pb-6 pt-2">
                 <Link
-                  href="/contact"
+                  href="/Contactus"
                   className={`block w-full py-2.5 sm:py-3 rounded-lg text-center font-semibold text-xs sm:text-sm border-2 transition-colors ${
                     plan.featured
                       ? "bg-white text-[#182b68] border-[#182b68] hover:bg-gray-50"
