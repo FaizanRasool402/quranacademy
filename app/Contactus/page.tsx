@@ -20,10 +20,15 @@ export default function ContactPage() {
     setErrorMsg("");
 
     try {
-      const res = await fetch("/api/contact", {
+      const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+
+      const res = await fetch(`${baseUrl}/api/contact`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify({
+          ...form,
+          source: "contactus_page_quick_contact",
+        }),
       });
 
       if (res.ok) {

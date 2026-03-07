@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
 
 const latestBlogs = [
   {
@@ -47,7 +48,47 @@ const socialLinks = [
   },
 ];
 
+type QuickStatus = "idle" | "loading" | "success" | "error";
+
 export default function Footer() {
+  const [qcName, setQcName] = useState("");
+  const [qcEmail, setQcEmail] = useState("");
+  const [qcMessage, setQcMessage] = useState("");
+  const [qcStatus, setQcStatus] = useState<QuickStatus>("idle");
+
+  const handleQuickSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!qcName || !qcEmail || !qcMessage) return;
+
+    setQcStatus("loading");
+
+    try {
+      const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+
+      const res = await fetch(`${baseUrl}/api/contact`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: qcName,
+          email: qcEmail,
+          message: qcMessage,
+          source: "footer_quick_contact",
+        }),
+      });
+
+      if (res.ok) {
+        setQcStatus("success");
+        setQcName("");
+        setQcEmail("");
+        setQcMessage("");
+      } else {
+        setQcStatus("error");
+      }
+    } catch {
+      setQcStatus("error");
+    }
+  };
+
   return (
     <footer className="relative w-full overflow-hidden">
       {/* Primary Content Area - Light background with rounded edges, overlaps blue bar */}
@@ -224,27 +265,34 @@ export default function Footer() {
                 <h3 className="font-bold text-gray-900 text-base sm:text-lg mb-3 sm:mb-4">
                   Quick Contact
                 </h3>
-                <form className="space-y-3">
+                <form className="space-y-3" onSubmit={handleQuickSubmit}>
                   <input
                     type="text"
                     placeholder="Name"
+                    value={qcName}
+                    onChange={(e) => setQcName(e.target.value)}
                     className="w-full px-4 py-2.5 rounded-lg border border-gray-300 bg-white text-gray-900 placeholder-gray-400 text-sm focus:outline-none focus:border-[#182b68] transition-colors"
                   />
                   <input
                     type="email"
                     placeholder="Email"
+                    value={qcEmail}
+                    onChange={(e) => setQcEmail(e.target.value)}
                     className="w-full px-4 py-2.5 rounded-lg border border-gray-300 bg-white text-gray-900 placeholder-gray-400 text-sm focus:outline-none focus:border-[#182b68] transition-colors"
                   />
                   <textarea
                     placeholder="Message"
                     rows={3}
+                    value={qcMessage}
+                    onChange={(e) => setQcMessage(e.target.value)}
                     className="w-full px-4 py-2.5 rounded-lg border border-gray-300 bg-white text-gray-900 placeholder-gray-400 text-sm focus:outline-none focus:border-[#182b68] transition-colors resize-none"
                   />
                   <button
                     type="submit"
-                    className="w-full py-3 rounded-lg bg-[#182b68] text-white font-semibold text-sm hover:opacity-90 transition-opacity"
+                    disabled={qcStatus === "loading"}
+                    className="w-full py-3 rounded-lg bg-[#182b68] text-white font-semibold text-sm hover:opacity-90 transition-opacity disabled:opacity-70 disabled:cursor-not-allowed"
                   >
-                    Submit Now
+                    {qcStatus === "loading" ? "Sending..." : "Submit Now"}
                   </button>
                 </form>
               </div>

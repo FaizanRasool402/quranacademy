@@ -2,8 +2,49 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
+
+type Status = "idle" | "loading" | "success" | "error";
 
 export default function Hero() {
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [message, setMessage] = useState("");
+  const [status, setStatus] = useState<Status>("idle");
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!name || !phone || !message) return;
+
+    setStatus("loading");
+
+    try {
+      const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+
+      const res = await fetch(`${baseUrl}/api/contact`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name,
+          phone,
+          message,
+          source: "hero_admission_form",
+        }),
+      });
+
+      if (res.ok) {
+        setStatus("success");
+        setName("");
+        setPhone("");
+        setMessage("");
+      } else {
+        setStatus("error");
+      }
+    } catch (error) {
+      setStatus("error");
+    }
+  };
+
   return (
     <section className="relative min-h-[85vh] sm:min-h-[90vh] w-full overflow-hidden flex items-center">
       <style jsx>{`
@@ -90,30 +131,37 @@ export default function Hero() {
             <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-white uppercase tracking-wider text-center mb-6 sm:mb-8">
               Admission
             </h2>
-            <form className="space-y-5">
+            <form className="space-y-5" onSubmit={handleSubmit}>
               <input
                 type="text"
                 placeholder="Your Name*"
                 required
+                value={name}
+                onChange={(e) => setName(e.target.value)}
                 className="w-full px-4 py-3 rounded-md bg-[#2a3a5c] border border-white/30 text-white placeholder-white/60 focus:outline-none focus:border-white/60 transition-colors"
               />
               <input
                 type="tel"
                 placeholder="Phone *"
                 required
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
                 className="w-full px-4 py-3 rounded-md bg-[#2a3a5c] border border-white/30 text-white placeholder-white/60 focus:outline-none focus:border-white/60 transition-colors"
               />
               <textarea
                 placeholder="Message *"
                 required
                 rows={4}
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
                 className="w-full px-4 py-3 rounded-md bg-[#2a3a5c] border border-white/30 text-white placeholder-white/60 focus:outline-none focus:border-white/60 transition-colors resize-none"
               />
               <button
                 type="submit"
-                className="w-full py-3.5 rounded-md bg-[#fda600] text-white font-bold text-sm uppercase tracking-wider hover:opacity-90 transition-opacity shadow-lg"
+                disabled={status === "loading"}
+                className="w-full py-3.5 rounded-md bg-[#fda600] text-white font-bold text-sm uppercase tracking-wider hover:opacity-90 transition-opacity shadow-lg disabled:opacity-70 disabled:cursor-not-allowed"
               >
-                Submit Now
+                {status === "loading" ? "Sending..." : "Submit Now"}
               </button>
             </form>
           </div>

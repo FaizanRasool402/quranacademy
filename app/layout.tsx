@@ -4,6 +4,7 @@ import "./globals.css";
 import Navbar from "@/components/Navbar";
 import CTA from "@/components/CTA";
 import Footer from "@/components/Footer";
+import WhatsAppButton from "@/components/WhatsAppButton";
 
 const raleway = Raleway({
   weight: ["300", "400", "500", "600", "700"],
@@ -28,6 +29,7 @@ export default function RootLayout({
         {children}
         <CTA />
         <Footer />
+        <WhatsAppButton />
       </body>
     </html>
   );
