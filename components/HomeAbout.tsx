@@ -76,7 +76,7 @@ export default function HomeAbout() {
             {/* Right - Image */}
             <div ref={rightRef} className="slide-from-right relative rounded-lg overflow-hidden shadow-xl aspect-[4/3] max-h-[300px] sm:max-h-[350px] md:max-h-[400px] order-first md:order-none">
               <Image
-                src="/images/choto.jpg"
+                src="/images/teach.jpeg"
                 alt="Student reading Quran"
                 fill
                 className="object-cover"

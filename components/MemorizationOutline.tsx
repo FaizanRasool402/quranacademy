@@ -30,7 +30,7 @@ export default function MemorizationOutline() {
           {/* Right - Image */}
           <div className="relative w-full md:w-1/2 aspect-[4/3] sm:aspect-[16/10] md:aspect-auto md:min-h-[300px] lg:min-h-[360px] xl:min-h-[400px] order-2">
             <Image
-              src="/images/Memorization.jpg"
+              src="/images/teaching.jpeg"
               alt="Quran Memorization"
               fill
               className="object-cover"

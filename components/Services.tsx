@@ -26,7 +26,7 @@ const services = [
   {
     title: "Quran Memorization",
     tag: "Popular",
-    image: "/images/Memorization.jpg",
+    image: "/images/teaching.jpeg",
     href: "/QuranMemorization",
   },
   {
