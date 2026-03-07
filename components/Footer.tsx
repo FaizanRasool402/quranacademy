@@ -1,28 +1,14 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 
-const latestBlogs = [
-  {
-    title: "Dua Between Two Sujood",
-    date: "February 6, 2026",
-    href: "/blogs/1",
-    image: "/images/choto.jpg",
-  },
-  {
-    title: "Dua for Sehri (Arabic, Translation)",
-    date: "January 28, 2026",
-    href: "/blogs/2",
-    image: "/images/choto.jpg",
-  },
-  {
-    title: "How to Complete the Quran in 30 Days",
-    date: "January 27, 2026",
-    href: "/blogs/3",
-    image: "/images/choto.jpg",
-  },
+const quickLinks = [
+  { label: "About Us", href: "/Aboutus" },
+  { label: "Courses", href: "/Courses" },
+  { label: "Teachers", href: "/Teachers" },
+  { label: "Fee Chart", href: "/FeeChart" },
+  { label: "Contact Us", href: "/Contactus" },
 ];
 
 const socialLinks = [
@@ -119,48 +105,19 @@ export default function Footer() {
                 </div>
               </div>
 
-              {/* Column 2 - Latest Blog */}
+              {/* Column 2 - Quick Links */}
               <div className="space-y-4">
                 <h3 className="font-bold text-gray-900 text-base sm:text-lg mb-3 sm:mb-4">
-                  Latest Blog
+                  Quick Links
                 </h3>
-                <ul className="space-y-4">
-                  {latestBlogs.map((blog, index) => (
-                    <li key={index}>
+                <ul className="space-y-3">
+                  {quickLinks.map((link) => (
+                    <li key={link.href}>
                       <Link
-                        href={blog.href}
-                        className="flex gap-3 group hover:opacity-80 transition-opacity"
+                        href={link.href}
+                        className="text-gray-600 text-sm hover:text-[#182b68] transition-colors"
                       >
-                        <div className="relative w-16 h-16 rounded-lg overflow-hidden shrink-0 bg-gray-200">
-                          <Image
-                            src={blog.image}
-                            alt={blog.title}
-                            fill
-                            className="object-cover group-hover:scale-105 transition-transform duration-300"
-                            sizes="64px"
-                          />
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <h4 className="text-gray-800 text-sm font-medium leading-snug mb-1 line-clamp-2">
-                            {blog.title}
-                          </h4>
-                          <p className="text-gray-500 text-xs flex items-center gap-1">
-                            <svg
-                              className="w-3.5 h-3.5"
-                              fill="none"
-                              stroke="currentColor"
-                              viewBox="0 0 24 24"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                              />
-                            </svg>
-                            {blog.date}
-                          </p>
-                        </div>
+                        {link.label}
                       </Link>
                     </li>
                   ))}
