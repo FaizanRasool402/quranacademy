@@ -3,14 +3,14 @@
 import { useEffect, useRef, useState } from "react";
 
 const pdfs = [
-  { id: 1, title: "Kalmas", arabic: "الكلمات", tag: "Foundations", file: "/pdfs/kalmas.pdf", description: "Learn the Six Kalmas with Arabic text, transliteration and English translation." },
-  { id: 2, title: "Basic Islamic Questions", arabic: "أسئلة إسلامية", tag: "Knowledge", file: "/pdfs/basic-islamic-questions.pdf", description: "Essential Q&A every Muslim should know about their faith." },
-  { id: 3, title: "Prayer Method for Women", arabic: "صلاة المرأة", tag: "Salah", file: "/pdfs/prayer-method-women.pdf", description: "Step-by-step guide to perform Salah correctly for women." },
-  { id: 4, title: "Prayer Method for Men", arabic: "صلاة الرجل", tag: "Salah", file: "/pdfs/prayer-method-men.pdf", description: "Step-by-step guide to perform Salah correctly for men." },
-  { id: 5, title: "My First Hadith's Book", arabic: "أحاديث", tag: "Hadith", file: "/pdfs/my-first-hadith.pdf", description: "Authentic Hadiths for young learners and new Muslims." },
-  { id: 6, title: "Daily Dua's", arabic: "أدعية يومية", tag: "Supplication", file: "/pdfs/daily-duas.pdf", description: "Daily supplications with Arabic, transliteration and meaning." },
-  { id: 7, title: "Madni Qaida", arabic: "القاعدة المدنية", tag: "Qaida", file: "/pdfs/madni-qaida-english.pdf", description: "Learn Arabic alphabets and pronunciation with Madni Qaida." },
-  { id: 8, title: "Noorani Qaida", arabic: "القاعدة النورانية", tag: "Qaida", file: "/pdfs/noorani-qaida-english.pdf", description: "The classic Noorani Qaida — perfect for beginners." },
+  { id: 1, title: "Kalmas", arabic: "الكلمات", tag: "Foundations", file: "/pdfs/Kalmas.pdf", description: "Learn the Six Kalmas with Arabic text, transliteration and English translation." },
+  { id: 2, title: "Basic Islamic Questions", arabic: "أسئلة إسلامية", tag: "Knowledge", file: "/pdfs/Basic Islamic Questions.pdf", description: "Essential Q&A every Muslim should know about their faith." },
+  { id: 3, title: "Prayer Method for Women", arabic: "صلاة المرأة", tag: "Salah", file: "/pdfs/Prayer Method  For Women.pdf", description: "Step-by-step guide to perform Salah correctly for women." },
+  { id: 4, title: "Prayer Method for Men", arabic: "صلاة الرجل", tag: "Salah", file: "/pdfs/Prayer Method for Men .pdf", description: "Step-by-step guide to perform Salah correctly for men." },
+  { id: 5, title: "My First Hadith's Book", arabic: "أحاديث", tag: "Hadith", file: "/pdfs/My First Hadith's Book.pdf", description: "Authentic Hadiths for young learners and new Muslims." },
+  { id: 6, title: "Daily Dua's", arabic: "أدعية يومية", tag: "Supplication", file: "/pdfs/Daily Dua's For Every Muslim.pdf", description: "Daily supplications with Arabic, transliteration and meaning." },
+  { id: 7, title: "Madni Qaida", arabic: "القاعدة المدنية", tag: "Qaida", file: "/pdfs/Madni Qaida English.pdf", description: "Learn Arabic alphabets and pronunciation with Madni Qaida." },
+  { id: 8, title: "Noorani Qaida", arabic: "القاعدة النورانية", tag: "Qaida", file: "/pdfs/Noorani-Qaida-PDF-in-english-Download.pdf", description: "The classic Noorani Qaida — perfect for beginners." },
 ];
 
 export default function Downloads() {
@@ -375,7 +375,7 @@ export default function Downloads() {
 
             <div className="dl-left-bottom">
               <a
-                href={current.file}
+                href={encodeURI(current.file)}
                 download
                 className="dl-download-btn"
               >

@@ -29,7 +29,7 @@ export default function Navbar() {
       <div className="relative w-full max-w-6xl">
       <div className="w-full flex items-center justify-between gap-4 md:gap-8 bg-white rounded-full px-4 md:px-6 py-3 shadow-[0_4px_20px_rgba(0,0,0,0.08)]">
         {/* Logo */}
-        <Link href="/" prefetch={false} className="flex items-center gap-2 md:gap-3 shrink-0">
+        <Link href="/" className="flex items-center gap-2 md:gap-3 shrink-0">
           <Image
             src="/images/logo.jpeg"
             alt="Aiza Quran Academy Logo"
@@ -67,7 +67,6 @@ export default function Navbar() {
             <Link
               key={link.href}
               href={link.href}
-              prefetch={false}
               className="text-[15px] font-medium text-black hover:text-[#6b4c9a] transition-colors"
             >
               {link.label}
@@ -77,7 +76,6 @@ export default function Navbar() {
           <div className="relative group">
             <Link
               href="/Courses"
-              prefetch={false}
               className="text-[15px] font-medium text-black hover:text-[#6b4c9a] transition-colors flex items-center gap-1"
             >
               Courses
@@ -91,7 +89,6 @@ export default function Navbar() {
                   <Link
                     key={item.href}
                     href={item.href}
-                    prefetch={false}
                     className="block px-4 py-2 text-[15px] text-gray-700 hover:bg-gray-50 hover:text-[#182b68] transition-colors"
                   >
                     {item.label}
@@ -104,7 +101,6 @@ export default function Navbar() {
             <Link
               key={link.href}
               href={link.href}
-              prefetch={false}
               className="text-[15px] font-medium text-black hover:text-[#6b4c9a] transition-colors"
             >
               {link.label}
@@ -115,7 +111,6 @@ export default function Navbar() {
         {/* Contact Button - Desktop */}
         <Link
           href="/Contactus"
-          prefetch={false}
           className="hidden md:inline-flex shrink-0 px-5 md:px-6 py-2 md:py-2.5 rounded-md bg-[#182b68] text-white font-semibold text-sm md:text-[15px] shadow-[0_4px_14px_rgba(24,43,104,0.4)] hover:opacity-90 transition-colors"
         >
           Contact
@@ -130,7 +125,6 @@ export default function Navbar() {
               <Link
                 key={link.href}
                 href={link.href}
-                prefetch={false}
                 onClick={() => setMobileMenuOpen(false)}
                 className="py-3 px-4 rounded-lg text-[15px] font-medium text-gray-800 hover:bg-gray-50 hover:text-[#182b68] transition-colors"
               >
@@ -142,7 +136,6 @@ export default function Navbar() {
               <div className="flex items-center">
                 <Link
                   href="/Courses"
-                  prefetch={false}
                   onClick={() => setMobileMenuOpen(false)}
                   className="flex-1 py-3 px-4 rounded-lg text-[15px] font-medium text-gray-800 hover:bg-gray-50 transition-colors"
                 >
@@ -164,7 +157,6 @@ export default function Navbar() {
                     <Link
                       key={item.href}
                       href={item.href}
-                      prefetch={false}
                       onClick={() => setMobileMenuOpen(false)}
                       className="py-2 px-4 rounded-lg text-sm text-gray-600 hover:text-[#182b68]"
                     >
@@ -176,7 +168,6 @@ export default function Navbar() {
             </div>
             <Link
               href="/Contactus"
-              prefetch={false}
               onClick={() => setMobileMenuOpen(false)}
               className="mt-2 mx-4 py-3 rounded-lg bg-[#182b68] text-white font-semibold text-[15px] text-center hover:opacity-90 transition-opacity"
             >
