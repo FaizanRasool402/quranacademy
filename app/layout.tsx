@@ -3,6 +3,7 @@ import { Raleway } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import CTA from "@/components/CTA";
+import AdmissionPopup from "@/components/AdmissionPopup";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
 
@@ -30,6 +31,7 @@ export default function RootLayout({
         <CTA />
         <Footer />
         <WhatsAppButton />
+        <AdmissionPopup />
       </body>
     </html>
   );

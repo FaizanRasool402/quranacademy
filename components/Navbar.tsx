@@ -27,8 +27,8 @@ export default function Navbar() {
   return (
     <nav className="w-full flex justify-center px-4 py-4">
       <div className="relative w-full max-w-6xl">
-      <div className="w-full flex items-center justify-between gap-4 md:gap-8 bg-white rounded-full px-4 md:px-6 py-3 shadow-[0_4px_20px_rgba(0,0,0,0.08)]">
-        {/* Logo */}
+      <div className="w-full flex items-center justify-between gap-4 md:gap-8 bg-[#182b68] rounded-full px-4 md:px-6 py-3 shadow-[0_4px_20px_rgba(0,0,0,0.15)]">
+        {/* Logo - circular div stays white (image as is) */}
         <Link href="/" className="flex items-center gap-2 md:gap-3 shrink-0">
           <Image
             src="/images/logo.jpeg"
@@ -38,8 +38,8 @@ export default function Navbar() {
             className="rounded-full object-cover w-12 h-12"
           />
           <div className="flex flex-col leading-tight">
-            <span className="font-semibold text-black text-base md:text-lg">Aiza Quran</span>
-            <span className="text-black text-xs md:text-sm">Academy</span>
+            <span className="font-semibold text-white text-base md:text-lg">Aiza Quran</span>
+            <span className="text-white text-xs md:text-sm">Academy</span>
           </div>
         </Link>
 
@@ -51,11 +51,11 @@ export default function Navbar() {
           aria-label="Toggle menu"
         >
           {mobileMenuOpen ? (
-            <svg className="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
           ) : (
-            <svg className="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
             </svg>
           )}
@@ -67,7 +67,7 @@ export default function Navbar() {
             <Link
               key={link.href}
               href={link.href}
-              className="text-[15px] font-medium text-black hover:text-[#6b4c9a] transition-colors"
+              className="text-[15px] font-medium text-white hover:text-amber-300 transition-colors"
             >
               {link.label}
             </Link>
@@ -76,7 +76,7 @@ export default function Navbar() {
           <div className="relative group">
             <Link
               href="/Courses"
-              className="text-[15px] font-medium text-black hover:text-[#6b4c9a] transition-colors flex items-center gap-1"
+              className="text-[15px] font-medium text-white hover:text-amber-300 transition-colors flex items-center gap-1"
             >
               Courses
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -101,7 +101,7 @@ export default function Navbar() {
             <Link
               key={link.href}
               href={link.href}
-              className="text-[15px] font-medium text-black hover:text-[#6b4c9a] transition-colors"
+              className="text-[15px] font-medium text-white hover:text-amber-300 transition-colors"
             >
               {link.label}
             </Link>
@@ -111,7 +111,7 @@ export default function Navbar() {
         {/* Contact Button - Desktop */}
         <Link
           href="/Contactus"
-          className="hidden md:inline-flex shrink-0 px-5 md:px-6 py-2 md:py-2.5 rounded-md bg-[#182b68] text-white font-semibold text-sm md:text-[15px] shadow-[0_4px_14px_rgba(24,43,104,0.4)] hover:opacity-90 transition-colors"
+          className="hidden md:inline-flex shrink-0 px-5 md:px-6 py-2 md:py-2.5 rounded-md bg-[#fda600] text-white font-semibold text-sm md:text-[15px] shadow-[0_4px_14px_rgba(253,166,0,0.3)] hover:opacity-90 transition-colors"
         >
           Contact
         </Link>

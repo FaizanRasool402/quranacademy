@@ -2,49 +2,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
-
-type Status = "idle" | "loading" | "success" | "error";
 
 export default function Hero() {
-  const [name, setName] = useState("");
-  const [phone, setPhone] = useState("");
-  const [message, setMessage] = useState("");
-  const [status, setStatus] = useState<Status>("idle");
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (!name || !phone || !message) return;
-
-    setStatus("loading");
-
-    try {
-      const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001";
-
-      const res = await fetch(`${baseUrl}/api/contact`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name,
-          phone,
-          message,
-          source: "hero_admission_form",
-        }),
-      });
-
-      if (res.ok) {
-        setStatus("success");
-        setName("");
-        setPhone("");
-        setMessage("");
-      } else {
-        setStatus("error");
-      }
-    } catch (error) {
-      setStatus("error");
-    }
-  };
-
   return (
     <section className="relative min-h-[85vh] sm:min-h-[90vh] w-full overflow-hidden flex items-center">
       <style jsx>{`
@@ -79,92 +38,36 @@ export default function Hero() {
 
       {/* Background Image */}
       <Image
-        src="/images/bg.jpg"
+        src="/images/Heerro.png"
         alt=""
         fill
-        className="object-cover blur-[2px]"
+        className="object-cover"
         priority
         sizes="100vw"
+        style={{ objectPosition: "center 20%" }}
       />
-      {/* #182b68 Overlay */}
-      <div className="absolute inset-0 bg-[#182b68]/75" />
-
       {/* Content */}
       <div className="relative z-10 w-full max-w-6xl mx-auto px-4 sm:px-6 py-10 sm:py-12 md:py-16">
-        <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-8 md:gap-12">
-          {/* Left - Text & Buttons */}
-          <div className="animate-from-left relative bg-[#fda600] px-5 py-8 sm:px-8 sm:py-10 md:px-12 md:py-14 rounded-lg md:rounded-xl max-w-xl shadow-xl">
-            {/* Subtle texture pattern */}
-            <div
-              className="absolute inset-0 rounded-lg md:rounded-xl opacity-10"
-              style={{
-                backgroundImage: `url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M10 2L12 8L18 10L12 12L10 18L8 12L2 10L8 8Z' fill='%23000' fill-opacity='1'/%3E%3C/svg%3E")`,
-              }}
-            />
-            <div className="relative">
-              <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white leading-tight mb-3 sm:mb-4">
-                Learn Quran with us
+        <div className="flex flex-col md:flex-row md:justify-center md:items-center gap-8 md:gap-12">
+          {/* Center - Text & Buttons */}
+          <div className="animate-from-left px-5 py-8 sm:px-10 sm:py-12 md:px-16 md:py-16 max-w-3xl w-full text-center">
+            <div>
+              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white leading-tight mb-4 sm:mb-6 whitespace-nowrap">
+                Learn Quran Online
               </h1>
-              <p className="text-white/95 text-sm sm:text-base md:text-lg leading-relaxed mb-6 sm:mb-8 max-w-md">
+              <p className="text-white/95 text-base sm:text-lg md:text-xl leading-relaxed mb-4 sm:mb-5 max-w-2xl mx-auto">
                 Aiza Quran Academy is one of the internationally leading
                 Learn Quran teaching institute
               </p>
-              <div className="flex flex-wrap gap-3 sm:gap-4">
-                <Link
-                  href="/Contactus"
-                  className="inline-block px-5 py-2.5 sm:px-6 sm:py-3 rounded-md bg-[#182b68] text-white font-semibold text-sm sm:text-[15px] hover:opacity-90 transition-opacity"
-                >
-                  Get Admission
-                </Link>
-                <Link
-                  href="/Contactus"
-                  className="inline-block px-5 py-2.5 sm:px-6 sm:py-3 rounded-md bg-[#182b68] text-white font-semibold text-sm sm:text-[15px] hover:opacity-90 transition-opacity"
-                >
-                  Contact
-                </Link>
-              </div>
+              <Link
+                href="/Contactus"
+                className="inline-block px-10 py-2 sm:px-12 sm:py-2.5 rounded-full font-semibold text-base sm:text-lg text-white bg-[#fda600] hover:opacity-90 transition-opacity shadow-[0_4px_14px_rgba(253,166,0,0.35)]"
+              >
+                Register Now
+              </Link>
             </div>
           </div>
 
-          {/* Right - Admission Form */}
-          <div className="animate-from-right bg-[#182b68]/90 backdrop-blur-sm rounded-lg md:rounded-xl p-6 sm:p-8 md:p-10 max-w-md mx-auto md:ml-auto md:mr-0 border border-white/10 w-full">
-            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-white uppercase tracking-wider text-center mb-6 sm:mb-8">
-              Admission
-            </h2>
-            <form className="space-y-5" onSubmit={handleSubmit}>
-              <input
-                type="text"
-                placeholder="Your Name*"
-                required
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                className="w-full px-4 py-3 rounded-md bg-[#2a3a5c] border border-white/30 text-white placeholder-white/60 focus:outline-none focus:border-white/60 transition-colors"
-              />
-              <input
-                type="tel"
-                placeholder="Phone *"
-                required
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                className="w-full px-4 py-3 rounded-md bg-[#2a3a5c] border border-white/30 text-white placeholder-white/60 focus:outline-none focus:border-white/60 transition-colors"
-              />
-              <textarea
-                placeholder="Message *"
-                required
-                rows={4}
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                className="w-full px-4 py-3 rounded-md bg-[#2a3a5c] border border-white/30 text-white placeholder-white/60 focus:outline-none focus:border-white/60 transition-colors resize-none"
-              />
-              <button
-                type="submit"
-                disabled={status === "loading"}
-                className="w-full py-3.5 rounded-md bg-[#fda600] text-white font-bold text-sm uppercase tracking-wider hover:opacity-90 transition-opacity shadow-lg disabled:opacity-70 disabled:cursor-not-allowed"
-              >
-                {status === "loading" ? "Sending..." : "Submit Now"}
-              </button>
-            </form>
-          </div>
         </div>
       </div>
     </section>

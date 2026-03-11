@@ -307,7 +307,7 @@ export default function ContactPage() {
         .cp-form-title {
           font-size: 1.25rem;
           font-weight: 700;
-          color: var(--blue);
+          color: #182b68 !important;
           margin: 0 0 1.5rem;
         }
 
@@ -349,8 +349,9 @@ export default function ContactPage() {
         .cp .cp-form-wrap .cp-submit-btn,
         .cp-submit-btn,
         button.cp-submit-btn {
-          width: 100% !important;
-          padding: 0.875rem 1.5rem !important;
+          width: auto !important;
+          min-width: 180px;
+          padding: 1rem 2rem !important;
           border-radius: 0.75rem !important;
           background: #182b68 !important;
           background-color: #182b68 !important;
@@ -530,7 +531,7 @@ export default function ContactPage() {
               </div>
             ) : (
               <>
-                <h2 className="cp-form-title">Quick Contact</h2>
+                <h2 className="cp-form-title" style={{ color: '#182b68' }}>Quick Contact</h2>
 
                 <input className="cp-input" name="name" placeholder="Name" value={form.name} onChange={handleChange} />
                 
@@ -551,6 +552,7 @@ export default function ContactPage() {
                   <div className="cp-error-msg">⚠ {errorMsg}</div>
                 )}
 
+                <div className="mt-4 flex justify-center">
                 <button
                   className="cp-submit-btn"
                   style={{ background: '#182b68', backgroundColor: '#182b68', color: '#fff' }}
@@ -563,6 +565,7 @@ export default function ContactPage() {
                     <>Submit Now</>
                   )}
                 </button>
+                </div>
               </>
             )}
           </div>
