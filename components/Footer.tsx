@@ -96,7 +96,7 @@ export default function Footer() {
                   >
                     <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
                   </svg>
-                  <span className="text-sm">Lahore, Pakistan</span>
+                  <span className="text-sm">Islamabad, Pakistan</span>
                 </div>
               </div>
 
@@ -187,7 +187,7 @@ export default function Footer() {
                         d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
                       />
                     </svg>
-                    <span>Lahore, Pakistan</span>
+                    <span>Abdullah Shah Town Khanna Dak Islamabad street 2 House 6</span>
                   </li>
                 </ul>
 
