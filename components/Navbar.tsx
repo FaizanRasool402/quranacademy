@@ -25,22 +25,18 @@ export default function Navbar() {
   const [coursesOpen, setCoursesOpen] = useState(false);
 
   return (
-    <nav className="w-full flex justify-center px-4 py-4">
+    <nav className="sticky top-0 z-50 w-full flex justify-center px-4 py-4 bg-transparent">
       <div className="relative w-full max-w-6xl">
       <div className="w-full flex items-center justify-between gap-4 md:gap-8 bg-[#182b68] rounded-full px-4 md:px-6 py-3 shadow-[0_4px_20px_rgba(0,0,0,0.15)]">
-        {/* Logo - circular div stays white (image as is) */}
-        <Link href="/" className="flex items-center gap-2 md:gap-3 shrink-0">
+        {/* Logo */}
+        <Link href="/" className="flex items-center shrink-0">
           <Image
-            src="/images/logo.jpeg"
-            alt="Aiza Quran Academy Logo"
-            width={48}
-            height={48}
-            className="rounded-full object-cover w-12 h-12"
+            src="/images/mainlogo.png"
+            alt="Aiza Quran Academy"
+            width={220}
+            height={56}
+            className="h-12 w-auto md:h-14 object-contain"
           />
-          <div className="flex flex-col leading-tight">
-            <span className="font-semibold text-white text-base md:text-lg">Aiza Quran</span>
-            <span className="text-white text-xs md:text-sm">Academy</span>
-          </div>
         </Link>
 
         {/* Mobile Hamburger */}

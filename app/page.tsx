@@ -1,5 +1,6 @@
 import dynamic from "next/dynamic";
 import Hero from "@/components/Hero";
+import StatsCounter from "@/components/Counters";
 import Box from "@/components/Box";
 import Points from "@/components/Points";
 import HomeAbout from "@/components/HomeAbout";
@@ -12,6 +13,7 @@ export default function Home() {
   return (
     <div>
       <Hero />
+      <StatsCounter />
       <Box />
       <Points />
       <HomeAbout />

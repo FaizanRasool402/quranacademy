@@ -44,7 +44,7 @@ export default function Hero() {
         className="object-cover"
         priority
         sizes="100vw"
-        style={{ objectPosition: "center 20%" }}
+        style={{ objectPosition: "center 70%" }}
       />
       {/* Content */}
       <div className="relative z-10 w-full max-w-6xl mx-auto px-4 sm:px-6 py-10 sm:py-12 md:py-16">
