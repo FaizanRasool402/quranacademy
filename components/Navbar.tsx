@@ -9,6 +9,8 @@ const navLinks = [
   { label: "About us", href: "/Aboutus" },
   { label: "Fee Chart", href: "/FeeChart" },
   { label: "Teacher", href: "/Teachers" },
+  { label: "FAQs", href: "/Faqs" },
+  { label: "Countries", href: "/Countries" },
   { label: "Blogs", href: "/blogs" },
 ];
 

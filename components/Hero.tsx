@@ -38,7 +38,7 @@ export default function Hero() {
 
       {/* Background Image */}
       <Image
-        src="/images/Heerro.png"
+        src="/images/mmmain.jpeg"
         alt=""
         fill
         className="object-cover"
