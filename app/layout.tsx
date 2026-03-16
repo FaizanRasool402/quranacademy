@@ -24,8 +24,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${raleway.variable} font-sans`}>
-      <body className="font-sans antialiased">
+    <html lang="en" className={`${raleway.variable} font-sans bg-white`}>
+      <body className="font-sans antialiased bg-white text-[#171717]">
         <Navbar />
         {children}
         <CTA />
