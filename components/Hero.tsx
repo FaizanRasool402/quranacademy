@@ -5,7 +5,7 @@ import Link from "next/link";
 
 export default function Hero() {
   return (
-    <section className="relative min-h-[85vh] sm:min-h-[90vh] w-full overflow-hidden flex items-center">
+    <section className="relative min-h-[55vh] sm:min-h-[90vh] w-full overflow-hidden flex items-center">
       <style jsx>{`
         @keyframes slideFromLeft {
           0% {

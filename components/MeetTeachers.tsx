@@ -41,8 +41,8 @@ const sections = [
 ];
 
 const stats = [
-  { value: 500, suffix: "+", label: "Students Taught" },
-  { value: 6, suffix: "+", label: "Expert Teachers" },
+  { value: 400, suffix: "+", label: "Students Taught" },
+  { value: 20, suffix: "+", label: "Expert Teachers" },
   { value: 10, suffix: "+", label: "Years Experience" },
   { value: 5, suffix: "", label: "Average Rating", hasStar: true },
 ];
