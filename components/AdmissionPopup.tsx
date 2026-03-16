@@ -57,7 +57,7 @@ export default function AdmissionPopup() {
       <div className="relative bg-[#182b68] rounded-2xl p-6 sm:p-8 max-w-md w-full shadow-2xl border border-white/10">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-xl sm:text-2xl font-bold text-white uppercase tracking-wider">
-            Admission
+            Start Free Trial
           </h2>
           <button
             type="button"
