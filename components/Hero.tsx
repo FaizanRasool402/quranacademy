@@ -52,7 +52,7 @@ export default function Hero() {
           {/* Center - Text & Buttons */}
           <div className="animate-from-left px-5 py-8 sm:px-10 sm:py-12 md:px-16 md:py-16 max-w-3xl w-full text-center">
             <div>
-              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white leading-tight mb-4 sm:mb-6 whitespace-nowrap">
+              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white leading-tight mb-4 sm:mb-6 whitespace-normal md:whitespace-nowrap">
                 Learn Quran Online
               </h1>
               <p className="text-white/95 text-base sm:text-lg md:text-xl leading-relaxed mb-4 sm:mb-5 max-w-2xl mx-auto">
