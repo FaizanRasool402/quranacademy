@@ -25,7 +25,7 @@ export default function FeeHero() {
           <span className="block w-8 sm:w-10 h-px bg-[#fda600] opacity-60" />
         </div>
         <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white">
-          Fee Chart
+        Monthly Fee Schedule or Chart
         </h1>
         <div className="w-16 h-0.5 mx-auto mt-4 sm:mt-6 rounded-full" style={{ background: 'linear-gradient(90deg, transparent, #fda600, transparent)' }} />
       </div>

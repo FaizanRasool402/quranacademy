@@ -88,7 +88,7 @@ export default function Services() {
               </span>
             </div>
             <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-              Quran For All Academy Services
+            Aiza Quran Academy Services
             </h2>
             <p className="text-gray-600 text-sm sm:text-[15px] leading-relaxed max-w-2xl mx-auto px-2">
             At Aiza Quran Academy, we offer a wide range of Quran and Islamic courses designed to guide learners of all ages toward a deeper connection with their faith.

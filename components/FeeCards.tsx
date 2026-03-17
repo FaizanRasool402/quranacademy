@@ -168,7 +168,7 @@ export default function FeeCards() {
         {/* USA & Canada Section */}
         <div>
           <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-[#182b68] text-center mb-8 sm:mb-10 md:mb-12 lg:mb-16 px-2">
-            Fee (Hadiya) of the Quran Courses
+          For USA & Canada Monthly Fee
           </h2>
           <FeeCardGrid plans={usaCanadaPlans} />
         </div>
