@@ -16,10 +16,10 @@ const navLinks = [
 
 const coursesDropdown = [
   { label: "Noorani Qaida Course", href: "/NooraniQaida" },
-  { label: "Quran Translation Course", href: "/QuranTranslation" },
   { label: "Quran Tajweed Course", href: "/QuranTajweed" },
-  { label: "Quran Memorization Course", href: "/QuranMemorization" },
+  { label: "Quran Translation Course", href: "/QuranTranslation" },
   { label: "Quran Tafsir Course", href: "/QuranTafsir" },
+  { label: "Quran Memorization Course", href: "/QuranMemorization" },
   { label: "Basic Islamic Studies", href: "/IslamicStudies" },
   { label: "Salah and Six kalmas", href: "/Salah" },
   { label: "Hadith Studies For Kids", href: "/Hadith" },
