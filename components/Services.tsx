@@ -35,6 +35,24 @@ const services = [
     image: "/images/tafsir.jpg",
     href: "/QuranTafsir",
   },
+  {
+    title: "Basic Islamic Studies",
+    tag: "New",
+    image: "/images/IslamicStudies.jpeg",
+    href: "/IslamicStudies",
+  },
+  {
+    title: "Salah and Six Kalmas",
+    tag: "Popular",
+    image: "/images/salah.jpeg",
+    href: "/Salah",
+  },
+  {
+    title: "Hadith Studies For Kids",
+    tag: "Featured",
+    image: "/images/teach.jpeg",
+    href: "/Hadith",
+  },
 ];
 
 export default function Services() {
@@ -76,6 +94,9 @@ export default function Services() {
         .service-card:nth-child(3) { transition-delay: 0.24s; }
         .service-card:nth-child(4) { transition-delay: 0.36s; }
         .service-card:nth-child(5) { transition-delay: 0.48s; }
+        .service-card:nth-child(6) { transition-delay: 0.60s; }
+        .service-card:nth-child(7) { transition-delay: 0.72s; }
+        .service-card:nth-child(8) { transition-delay: 0.84s; }
       `}</style>
       <section className="w-full bg-white py-12 sm:py-16 md:py-20 px-4 sm:px-6">
         <div className="max-w-6xl mx-auto">
