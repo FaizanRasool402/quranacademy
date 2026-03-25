@@ -14,8 +14,38 @@ const raleway = Raleway({
 });
 
 export const metadata: Metadata = {
-  title: "Aiza Quran Academy",
-  description: "Learn Quran online with expert teachers",
+  title: {
+    default: "Aiza Quran Academy | Learn Quran Online with Expert Female Tutors",
+    template: "%s | Aiza Quran Academy",
+  },
+  description:
+    "Aiza Quran Academy is a trusted online Quran learning institute offering one-on-one classes for kids and adults. Learn Quran with Tajweed, Hifz, Tafsir, Islamic Studies and more from certified female tutors worldwide.",
+  keywords: [
+    "online Quran classes",
+    "learn Quran online",
+    "Quran for kids",
+    "female Quran tutor",
+    "Noorani Qaida online",
+    "Quran Tajweed course",
+    "Quran Memorization",
+    "Quran Hifz online",
+    "Islamic Studies online",
+    "Aiza Quran Academy",
+  ],
+  alternates: { canonical: "/" },
+  openGraph: {
+    type: "website",
+    siteName: "Aiza Quran Academy",
+    title: "Aiza Quran Academy | Learn Quran Online with Expert Female Tutors",
+    description:
+      "Join Aiza Quran Academy for personalized online Quran classes. Expert female tutors teach kids and adults Quran with Tajweed, Hifz, Tafsir and Islamic Studies — start with 5 Days Free Trial.",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Aiza Quran Academy | Learn Quran Online",
+    description:
+      "Expert female Quran tutors for kids and adults. One-on-one online classes — Tajweed, Hifz, Islamic Studies and more. Try 5 Days Free!",
+  },
 };
 
 export default function RootLayout({
