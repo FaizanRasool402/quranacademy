@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Raleway } from "next/font/google";
+import { Amiri, Raleway } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import CTA from "@/components/CTA";
@@ -8,9 +8,18 @@ import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
 
 const raleway = Raleway({
-  weight: ["300", "400", "500", "600", "700"],
+  weight: ["400", "500", "600", "700"],
   subsets: ["latin"],
   variable: "--font-raleway",
+  display: "swap",
+});
+
+const amiri = Amiri({
+  weight: ["400", "700"],
+  subsets: ["arabic", "latin"],
+  variable: "--font-amiri",
+  display: "swap",
+  preload: false,
 });
 
 export const metadata: Metadata = {
@@ -54,7 +63,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${raleway.variable} font-sans bg-white`}>
+    <html lang="en" className={`${raleway.variable} ${amiri.variable} font-sans bg-white`}>
       <body className="font-sans antialiased bg-white text-[#171717]">
         <Navbar />
         {children}

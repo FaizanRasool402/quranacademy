@@ -48,8 +48,6 @@ export default function ContactClient() {
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap');
-
         .cp {
           --blue: #182b68;
           --blue-light: #2a3f7a;
@@ -139,7 +137,7 @@ export default function ContactClient() {
         }
         .cp-hero-arabic-deco svg { width: 100%; height: 100%; }
         .cp-hero-arabic-deco text {
-          font-family: 'Amiri', serif;
+          font-family: var(--font-amiri), serif;
           font-size: 20px;
           fill: rgba(253,166,0,0.12);
           letter-spacing: 12px;
@@ -273,7 +271,7 @@ export default function ContactClient() {
         }
 
         .cp-arabic-deco {
-          font-family: 'Amiri', serif;
+          font-family: var(--font-amiri), serif;
           font-size: 2rem;
           color: rgba(24,43,104,0.1);
           direction: rtl;

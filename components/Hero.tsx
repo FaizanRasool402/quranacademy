@@ -3,6 +3,10 @@
 import Image from "next/image";
 import Link from "next/link";
 
+/** Tiny placeholder for LCP image — reduces CLS without extra network */
+const HERO_BLUR_DATA_URL =
+  "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAb/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCwABmQ/9k=";
+
 export default function Hero() {
   return (
     <section className="relative min-h-[55vh] sm:min-h-[90vh] w-full overflow-hidden flex items-center">
@@ -43,7 +47,11 @@ export default function Hero() {
         fill
         className="object-cover"
         priority
+        fetchPriority="high"
         sizes="100vw"
+        quality={82}
+        placeholder="blur"
+        blurDataURL={HERO_BLUR_DATA_URL}
         style={{ objectPosition: "center 70%" }}
       />
       {/* Content */}

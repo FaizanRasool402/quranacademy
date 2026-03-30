@@ -30,8 +30,6 @@ export default function Downloads() {
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap');
-
         .dl {
           --blue: #182b68;
           --blue-light: #2a3f7a;
@@ -57,7 +55,7 @@ export default function Downloads() {
           top: 50%;
           right: -0.5rem;
           transform: translateY(-50%);
-          font-family: 'Amiri', serif;
+          font-family: var(--font-amiri), serif;
           font-size: clamp(6rem, 14vw, 12rem);
           color: rgba(24,43,104,0.06);
           line-height: 1;
@@ -145,7 +143,7 @@ export default function Downloads() {
         }
 
         .dl-arabic-display {
-          font-family: 'Amiri', serif;
+          font-family: var(--font-amiri), serif;
           font-size: clamp(1.25rem, 2.5vw, 1.75rem);
           color: var(--gold);
           direction: rtl;

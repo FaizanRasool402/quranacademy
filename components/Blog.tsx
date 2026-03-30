@@ -50,8 +50,6 @@ export default function Blog() {
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap');
-
         .bl {
           --blue: #182b68;
           --blue-light: #2a3f7a;
@@ -148,7 +146,7 @@ export default function Blog() {
           height: 100%;
         }
         .bl-hero-bismillah text {
-          font-family: 'Amiri', serif;
+          font-family: var(--font-amiri), serif;
           font-size: 18px;
           fill: rgba(253,166,0,0.12);
           letter-spacing: 10px;
@@ -289,7 +287,7 @@ export default function Blog() {
         }
         .bl-card-arabic {
           position: absolute;
-          font-family: 'Amiri', serif;
+          font-family: var(--font-amiri), serif;
           font-size: 5rem;
           direction: rtl;
           line-height: 1;
