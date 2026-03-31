@@ -23,6 +23,15 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       {
+        source: "/_next/static/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
+          },
+        ],
+      },
+      {
         source: "/images/:path*",
         headers: [
           {
@@ -40,6 +49,15 @@ const nextConfig: NextConfig = {
           },
         ],
       },
+      {
+        source: "/:all*(svg|jpg|jpeg|png|webp|avif|woff2|woff|ttf)",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
+          },
+        ],
+      },
     ];
   },
   experimental: {
@@ -48,7 +66,6 @@ const nextConfig: NextConfig = {
       static: 30,
     },
     optimizeCss: true,
-    optimizePackageImports: ["react-pdf"],
   },
   expireTime: 0,
 };
