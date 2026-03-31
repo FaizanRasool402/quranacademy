@@ -40,6 +40,7 @@ export default function Navbar() {
             alt="Aiza Quran Academy"
             width={220}
             height={56}
+            sizes="(max-width: 768px) 180px, 220px"
             className="h-12 w-auto md:h-14 object-contain"
           />
         </Link>

@@ -1,17 +1,20 @@
 import type { Metadata } from "next";
+import dynamic from "next/dynamic";
 import { Amiri, Raleway } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
-import CTA from "@/components/CTA";
-import AdmissionPopup from "@/components/AdmissionPopup";
-import Footer from "@/components/Footer";
-import WhatsAppButton from "@/components/WhatsAppButton";
+
+const CTA = dynamic(() => import("@/components/CTA"));
+const Footer = dynamic(() => import("@/components/Footer"));
+const WhatsAppButton = dynamic(() => import("@/components/WhatsAppButton"));
+const AdmissionPopup = dynamic(() => import("@/components/AdmissionPopup"));
 
 const raleway = Raleway({
   weight: ["400", "500", "600", "700"],
   subsets: ["latin"],
   variable: "--font-raleway",
   display: "swap",
+  adjustFontFallback: true,
 });
 
 const amiri = Amiri({
@@ -20,6 +23,7 @@ const amiri = Amiri({
   variable: "--font-amiri",
   display: "swap",
   preload: false,
+  adjustFontFallback: true,
 });
 
 export const metadata: Metadata = {

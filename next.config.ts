@@ -6,6 +6,12 @@ const assetPrefix =
 
 const nextConfig: NextConfig = {
   ...(assetPrefix ? { assetPrefix } : {}),
+  compiler: {
+    removeConsole:
+      process.env.NODE_ENV === "production"
+        ? { exclude: ["error", "warn"] }
+        : false,
+  },
   env: {
     NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
   },
@@ -41,6 +47,7 @@ const nextConfig: NextConfig = {
       dynamic: 0,
       static: 30,
     },
+    optimizeCss: true,
     optimizePackageImports: ["react-pdf"],
   },
   expireTime: 0,

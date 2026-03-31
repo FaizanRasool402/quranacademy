@@ -49,7 +49,7 @@ export default function Hero() {
         priority
         fetchPriority="high"
         sizes="100vw"
-        quality={82}
+        quality={75}
         placeholder="blur"
         blurDataURL={HERO_BLUR_DATA_URL}
         style={{ objectPosition: "center 70%" }}
