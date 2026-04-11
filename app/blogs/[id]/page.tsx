@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
-import dynamic from "next/dynamic";
 import { notFound } from "next/navigation";
-
-const PublicBlogPost = dynamic(() => import("@/components/PublicBlogPost"), { ssr: false });
+import PublicBlogPost from "@/components/PublicBlogPost";
 
 export async function generateMetadata({
   params,
@@ -18,6 +16,8 @@ export async function generateMetadata({
 
 export default async function BlogDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  if (!id || id.length < 10) notFound();
+  if (!id || !/^[a-f\d]{24}$/i.test(id)) {
+    notFound();
+  }
   return <PublicBlogPost id={id} />;
 }
