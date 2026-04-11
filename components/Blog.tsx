@@ -1,51 +1,51 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
+import { getApiBase } from "@/lib/apiBase";
 
-const blogs = [
-  {
-    id: 1,
-    date: "Feb 20, 2026",
-    readTime: "5 min read",
-    title: "How to Start Learning the Quran as a Complete Beginner",
-    excerpt: "Beginning your Quran journey can feel overwhelming. We break it down into simple, beautiful steps that anyone can follow at any age.",
-    arabic: "بسم الله",
-    bg: "linear-gradient(145deg, #182b68 0%, #1e3a7a 60%, #182b68 100%)",
-    accent: "#fda600",
-  },
-  {
-    id: 2,
-    date: "Feb 14, 2026",
-    readTime: "4 min read",
-    title: "What is Tajweed and Why Does it Matter?",
-    excerpt: "Tajweed transforms your recitation. Discover why proper pronunciation deepens your bond with Allah's words and how to get started.",
-    arabic: "التجويد",
-    bg: "linear-gradient(145deg, #1a3a5c 0%, #234b6e 60%, #1a3a5c 100%)",
-    accent: "#fda600",
-  },
-  {
-    id: 3,
-    date: "Feb 08, 2026",
-    readTime: "6 min read",
-    title: "5 Proven Tips to Memorize the Quran Faster",
-    excerpt: "Memorizing the Quran is one of the greatest achievements in a Muslim's life. These five techniques are trusted by Huffaz across the world.",
-    arabic: "الحفظ",
-    bg: "linear-gradient(145deg, #0f1f4a 0%, #182b68 60%, #0f1f4a 100%)",
-    accent: "#fda600",
-  },
+const BG_FALLBACKS = [
+  "linear-gradient(145deg, #182b68 0%, #1e3a7a 60%, #182b68 100%)",
+  "linear-gradient(145deg, #1a3a5c 0%, #234b6e 60%, #1a3a5c 100%)",
+  "linear-gradient(145deg, #0f1f4a 0%, #182b68 60%, #0f1f4a 100%)",
 ];
 
+type PublicBlogCard = {
+  id: string;
+  title: string;
+  excerpt: string;
+  imageUrl: string | null;
+  createdAt: string;
+  readTime: string;
+};
+
+function formatBlogDate(iso: string) {
+  return new Date(iso).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
+}
+
 export default function Blog() {
-  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const cardRefs = useRef<(HTMLAnchorElement | null)[]>([]);
+  const [blogs, setBlogs] = useState<PublicBlogCard[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    const api = getApiBase();
+    fetch(`${api}/api/public/blogs`)
+      .then((r) => r.json())
+      .then((data: PublicBlogCard[]) => setBlogs(Array.isArray(data) ? data : []))
+      .catch(() => setBlogs([]))
+      .finally(() => setLoading(false));
+  }, []);
+
+  useEffect(() => {
+    if (loading || blogs.length === 0) return;
     const io = new IntersectionObserver(
       (entries) => entries.forEach((e) => e.isIntersecting && e.target.classList.add("in")),
       { threshold: 0.1 }
     );
     cardRefs.current.forEach((r) => r && io.observe(r));
     return () => io.disconnect();
-  }, []);
+  }, [loading, blogs]);
 
   return (
     <>
@@ -466,40 +466,54 @@ export default function Blog() {
           </svg>
         </section>
 
-        {/* ══ CARDS ══ */}
+        {/* ══ CARDS (published posts from database) ══ */}
         <div className="bl-section">
-          <div className="bl-cards">
-            {blogs.map((blog, i) => (
-              <div
-                key={blog.id}
-                className="bl-card"
-                ref={(el) => { cardRefs.current[i] = el; }}
-                style={{ transitionDelay: `${i * 0.12}s` }}
-              >
-                {/* Visual */}
-                <div className="bl-card-visual">
-                  <div className="bl-card-visual-bg" style={{ background: blog.bg }} />
-                  <span className="bl-card-arabic" style={{ color: blog.accent }}>{blog.arabic}</span>
-                  <span className="bl-card-num">{String(blog.id).padStart(2, "0")}</span>
-                </div>
+          {loading ? (
+            <p className="text-center text-gray-500 py-12">Loading articles…</p>
+          ) : blogs.length === 0 ? (
+            <p className="text-center text-gray-500 py-12 max-w-md mx-auto">
+              No published articles yet. When an admin publishes a post from the dashboard, it will appear here.
+            </p>
+          ) : (
+            <div className="bl-cards">
+              {blogs.map((blog, i) => {
+                const api = getApiBase();
+                const img = blog.imageUrl ? `${api}${blog.imageUrl}` : null;
+                const bgStyle = img
+                  ? { backgroundImage: `url(${img})`, backgroundSize: "cover" as const, backgroundPosition: "center" as const }
+                  : { background: BG_FALLBACKS[i % BG_FALLBACKS.length] };
+                return (
+                  <Link
+                    key={blog.id}
+                    href={`/blogs/${blog.id}`}
+                    className="bl-card"
+                    ref={(el) => { cardRefs.current[i] = el; }}
+                    style={{ transitionDelay: `${i * 0.12}s` }}
+                  >
+                    <div className="bl-card-visual">
+                      <div className="bl-card-visual-bg" style={bgStyle} />
+                      <span className="bl-card-arabic" style={{ color: "#fda600" }}>بسم الله</span>
+                      <span className="bl-card-num">{String(i + 1).padStart(2, "0")}</span>
+                    </div>
 
-                {/* Body */}
-                <div className="bl-card-body">
-                  <div className="bl-card-meta">
-                    <span className="bl-card-date">{blog.date}</span>
-                    <div className="bl-card-sep" />
-                    <span className="bl-card-rt">{blog.readTime}</span>
-                  </div>
-                  <h2 className="bl-card-title">{blog.title}</h2>
-                  <p className="bl-card-excerpt">{blog.excerpt}</p>
-                  <div className="bl-card-footer">
-                    <span className="bl-card-cta">Read Article →</span>
-                    <div className="bl-card-arrow">↗</div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
+                    <div className="bl-card-body">
+                      <div className="bl-card-meta">
+                        <span className="bl-card-date">{formatBlogDate(blog.createdAt)}</span>
+                        <div className="bl-card-sep" />
+                        <span className="bl-card-rt">{blog.readTime}</span>
+                      </div>
+                      <h2 className="bl-card-title">{blog.title}</h2>
+                      <p className="bl-card-excerpt">{blog.excerpt}</p>
+                      <div className="bl-card-footer">
+                        <span className="bl-card-cta">Read Article →</span>
+                        <div className="bl-card-arrow">↗</div>
+                      </div>
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+          )}
         </div>
 
         {/* Footer */}

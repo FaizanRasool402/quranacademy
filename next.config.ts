@@ -19,6 +19,8 @@ const nextConfig: NextConfig = {
     formats: ["image/avif", "image/webp"],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920],
     minimumCacheTTL: 31536000,
+    // Next.js 16: only listed qualities are allowed on <Image quality={…} />
+    qualities: [72, 75],
   },
   async headers() {
     return [
