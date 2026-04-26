@@ -12,12 +12,13 @@ export default function AddBlog() {
   const [mainHeading, setMainHeading] = useState("");
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [imageAltText, setImageAltText] = useState("");
+  const [introContent, setIntroContent] = useState("");
 
-  const [heading2First, setHeading2First] = useState("");
-  const [paragraphFirst, setParagraphFirst] = useState("");
-
-  const [heading2Second, setHeading2Second] = useState("");
-  const [paragraphSecond, setParagraphSecond] = useState("");
+  const [subheadings, setSubheadings] = useState<Array<{ title: string; content: string }>>([
+    { title: "", content: "" },
+  ]);
+  const [conclusion, setConclusion] = useState("");
 
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -44,10 +45,17 @@ export default function AddBlog() {
     try {
       const fd = new FormData();
       fd.append("mainHeading", mainHeading.trim());
-      fd.append("heading2First", heading2First.trim());
-      fd.append("paragraphFirst", paragraphFirst.trim());
-      fd.append("heading2Second", heading2Second.trim());
-      fd.append("paragraphSecond", paragraphSecond.trim());
+      fd.append("imageAltText", imageAltText.trim());
+      fd.append("introContent", introContent.trim());
+      fd.append(
+        "subheadings",
+        JSON.stringify(
+          subheadings
+            .map((item) => ({ title: item.title.trim(), content: item.content.trim() }))
+            .filter((item) => item.title || item.content)
+        )
+      );
+      fd.append("conclusion", conclusion.trim());
       if (imageFile) fd.append("featuredImage", imageFile);
 
       const res = await fetch(`${getApiBase()}/api/blogs`, {
@@ -156,55 +164,103 @@ export default function AddBlog() {
                 Remove image
               </button>
             )}
+            <div className="mt-4">
+              <label htmlFor="addblog-image-alt" className="block text-sm font-semibold text-[#182b68] mb-2">
+                Image alt text
+              </label>
+              <input
+                id="addblog-image-alt"
+                type="text"
+                value={imageAltText}
+                onChange={(e) => setImageAltText(e.target.value)}
+                placeholder="Describe the featured image for accessibility"
+                className="w-full rounded-lg border border-gray-200 px-4 py-2.5 text-[#171717] placeholder:text-gray-400 focus:border-[#182b68] focus:outline-none focus:ring-2 focus:ring-[#182b68]/15"
+              />
+            </div>
           </div>
 
-          {/* Block 1: Heading 2 + paragraph */}
+          {/* Content / Introduction */}
           <div className="space-y-3 rounded-2xl bg-white p-6 shadow-sm ring-1 ring-[#182b68]/8">
-            <label htmlFor="addblog-h2-1" className="block text-sm font-bold text-[#182b68]">
-              Heading 2
-            </label>
-            <input
-              id="addblog-h2-1"
-              type="text"
-              value={heading2First}
-              onChange={(e) => setHeading2First(e.target.value)}
-              placeholder="Section heading"
-              className="w-full rounded-lg border border-gray-200 px-4 py-2.5 text-[#171717] placeholder:text-gray-400 focus:border-[#182b68] focus:outline-none focus:ring-2 focus:ring-[#182b68]/15"
-            />
-            <label htmlFor="addblog-p-1" className="block text-sm font-medium text-gray-600 pt-2">
-              Paragraph
+            <label htmlFor="addblog-intro" className="block text-sm font-bold text-[#182b68]">
+              Content (Introduction)
             </label>
             <textarea
-              id="addblog-p-1"
-              value={paragraphFirst}
-              onChange={(e) => setParagraphFirst(e.target.value)}
-              placeholder="Write your paragraph here…"
-              rows={5}
+              id="addblog-intro"
+              value={introContent}
+              onChange={(e) => setIntroContent(e.target.value)}
+              placeholder="Write opening content here…"
+              rows={6}
               className="w-full rounded-lg border border-gray-200 px-4 py-3 text-[#171717] placeholder:text-gray-400 focus:border-[#182b68] focus:outline-none focus:ring-2 focus:ring-[#182b68]/15 resize-y min-h-[120px]"
             />
           </div>
 
-          {/* Block 2: Heading 2 + paragraph */}
+          {/* Optional Subheadings (5 - 10) */}
+          <div className="space-y-4 rounded-2xl bg-white p-6 shadow-sm ring-1 ring-[#182b68]/8">
+            <div className="flex items-center justify-between gap-3">
+              <p className="text-sm font-bold text-[#182b68]">Subheadings (Optional, up to 10)</p>
+              <button
+                type="button"
+                onClick={() => {
+                  if (subheadings.length >= 10) return;
+                  setSubheadings((prev) => [...prev, { title: "", content: "" }]);
+                }}
+                className="rounded-lg border border-[#182b68]/20 px-3 py-1.5 text-xs font-semibold text-[#182b68] hover:border-[#fda600]/50 hover:text-[#fda600]"
+              >
+                + Add subheading
+              </button>
+            </div>
+            {subheadings.map((item, idx) => (
+              <div key={`subheading-${idx}`} className="rounded-xl border border-gray-200 p-4 space-y-3">
+                <label htmlFor={`addblog-subheading-title-${idx}`} className="block text-xs font-semibold uppercase tracking-wide text-gray-500">
+                  Subheading {idx + 1}
+                </label>
+                <input
+                  id={`addblog-subheading-title-${idx}`}
+                  type="text"
+                  value={item.title}
+                  onChange={(e) => {
+                    const next = [...subheadings];
+                    next[idx] = { ...next[idx], title: e.target.value };
+                    setSubheadings(next);
+                  }}
+                  placeholder="Subheading title"
+                  className="w-full rounded-lg border border-gray-200 px-4 py-2.5 text-[#171717] placeholder:text-gray-400 focus:border-[#182b68] focus:outline-none focus:ring-2 focus:ring-[#182b68]/15"
+                />
+                <textarea
+                  id={`addblog-subheading-content-${idx}`}
+                  value={item.content}
+                  onChange={(e) => {
+                    const next = [...subheadings];
+                    next[idx] = { ...next[idx], content: e.target.value };
+                    setSubheadings(next);
+                  }}
+                  placeholder="Subheading content"
+                  rows={4}
+                  className="w-full rounded-lg border border-gray-200 px-4 py-3 text-[#171717] placeholder:text-gray-400 focus:border-[#182b68] focus:outline-none focus:ring-2 focus:ring-[#182b68]/15 resize-y min-h-[110px]"
+                />
+                {subheadings.length > 1 && (
+                  <button
+                    type="button"
+                    onClick={() => setSubheadings((prev) => prev.filter((_, i) => i !== idx))}
+                    className="text-xs font-medium text-red-600 hover:underline"
+                  >
+                    Remove
+                  </button>
+                )}
+              </div>
+            ))}
+          </div>
+
+          {/* Conclusion */}
           <div className="space-y-3 rounded-2xl bg-white p-6 shadow-sm ring-1 ring-[#182b68]/8">
-            <label htmlFor="addblog-h2-2" className="block text-sm font-bold text-[#182b68]">
-              Heading 2
-            </label>
-            <input
-              id="addblog-h2-2"
-              type="text"
-              value={heading2Second}
-              onChange={(e) => setHeading2Second(e.target.value)}
-              placeholder="Section heading"
-              className="w-full rounded-lg border border-gray-200 px-4 py-2.5 text-[#171717] placeholder:text-gray-400 focus:border-[#182b68] focus:outline-none focus:ring-2 focus:ring-[#182b68]/15"
-            />
-            <label htmlFor="addblog-p-2" className="block text-sm font-medium text-gray-600 pt-2">
-              Paragraph
+            <label htmlFor="addblog-conclusion" className="block text-sm font-bold text-[#182b68]">
+              Conclusion
             </label>
             <textarea
-              id="addblog-p-2"
-              value={paragraphSecond}
-              onChange={(e) => setParagraphSecond(e.target.value)}
-              placeholder="Write your paragraph here…"
+              id="addblog-conclusion"
+              value={conclusion}
+              onChange={(e) => setConclusion(e.target.value)}
+              placeholder="Write a strong conclusion..."
               rows={5}
               className="w-full rounded-lg border border-gray-200 px-4 py-3 text-[#171717] placeholder:text-gray-400 focus:border-[#182b68] focus:outline-none focus:ring-2 focus:ring-[#182b68]/15 resize-y min-h-[120px]"
             />

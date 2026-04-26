@@ -3,14 +3,15 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { getApiBase } from "@/lib/apiBase";
+import CTA from "@/components/CTA";
 
 type Post = {
   id: string;
   mainHeading: string;
-  heading2First: string;
-  paragraphFirst: string;
-  heading2Second: string;
-  paragraphSecond: string;
+  introContent: string;
+  subheadings: Array<{ title: string; content: string }>;
+  conclusion: string;
+  imageAltText: string;
   imageUrl: string | null;
   createdAt: string;
 };
@@ -90,36 +91,44 @@ export default function PublicBlogPost({ id }: { id: string }) {
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={img}
-              alt=""
+              alt={post.imageAltText || post.mainHeading}
               className="h-full w-full object-cover object-center"
             />
           </div>
         </div>
       ) : null}
 
-      {/* 3) Heading 2 blocks + paragraphs */}
+      {/* 3) Introduction + optional subheadings + conclusion */}
       <div className="max-w-5xl mx-auto px-4 space-y-10 sm:space-y-12 text-[#1f2937] leading-relaxed">
-        {(post.heading2First || post.paragraphFirst) && (
+        {post.introContent && (
           <section>
-            {post.heading2First ? (
-              <h2 className="text-xl sm:text-2xl font-bold text-[#182b68] mb-4">{post.heading2First}</h2>
-            ) : null}
-            {post.paragraphFirst ? (
-              <p className="text-base sm:text-[17px] whitespace-pre-wrap">{post.paragraphFirst}</p>
-            ) : null}
+            <p className="text-base sm:text-[17px] whitespace-pre-wrap">{post.introContent}</p>
           </section>
         )}
 
-        {(post.heading2Second || post.paragraphSecond) && (
+        {Array.isArray(post.subheadings)
+          ? post.subheadings.map((section, idx) => (
+              <section key={`${section.title}-${idx}`}>
+                {section.title ? (
+                  <h2 className="text-xl sm:text-2xl font-bold text-[#182b68] mb-4">{section.title}</h2>
+                ) : null}
+                {section.content ? (
+                  <p className="text-base sm:text-[17px] whitespace-pre-wrap">{section.content}</p>
+                ) : null}
+              </section>
+            ))
+          : null}
+
+        {post.conclusion && (
           <section>
-            {post.heading2Second ? (
-              <h2 className="text-xl sm:text-2xl font-bold text-[#182b68] mb-4">{post.heading2Second}</h2>
-            ) : null}
-            {post.paragraphSecond ? (
-              <p className="text-base sm:text-[17px] whitespace-pre-wrap">{post.paragraphSecond}</p>
-            ) : null}
+            <h2 className="text-xl sm:text-2xl font-bold text-[#182b68] mb-4">Conclusion</h2>
+            <p className="text-base sm:text-[17px] whitespace-pre-wrap">{post.conclusion}</p>
           </section>
         )}
+      </div>
+
+      <div className="mt-14 sm:mt-16">
+        <CTA />
       </div>
     </article>
   );
