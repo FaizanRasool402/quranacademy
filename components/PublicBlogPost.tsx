@@ -16,6 +16,13 @@ type Post = {
   createdAt: string;
 };
 
+function resolveImageSrc(api: string, imageUrl: string | null) {
+  if (!imageUrl) return null;
+  if (imageUrl.startsWith("data:")) return imageUrl;
+  if (/^https?:\/\//i.test(imageUrl)) return imageUrl;
+  return `${api}${imageUrl}`;
+}
+
 export default function PublicBlogPost({ id }: { id: string }) {
   const [post, setPost] = useState<Post | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -41,7 +48,7 @@ export default function PublicBlogPost({ id }: { id: string }) {
   }, [id]);
 
   const api = getApiBase();
-  const img = post?.imageUrl ? `${api}${post.imageUrl}` : null;
+  const img = resolveImageSrc(api, post?.imageUrl || null);
 
   if (error) {
     return (

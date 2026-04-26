@@ -14,6 +14,13 @@ type BlogRow = {
   createdAt: string;
 };
 
+function resolveImageSrc(api: string, imageUrl: string | null) {
+  if (!imageUrl) return null;
+  if (imageUrl.startsWith("data:")) return imageUrl;
+  if (/^https?:\/\//i.test(imageUrl)) return imageUrl;
+  return `${api}${imageUrl}`;
+}
+
 export default function AdminDashboard() {
   const router = useRouter();
   const [ready, setReady] = useState(false);
@@ -130,7 +137,7 @@ export default function AdminDashboard() {
           <ul className="grid gap-5 sm:grid-cols-1 md:grid-cols-2">
             {blogs.map((blog) => {
               const busy = actionId === blog.id;
-              const imgSrc = blog.imageUrl ? `${api}${blog.imageUrl}` : null;
+              const imgSrc = resolveImageSrc(api, blog.imageUrl);
               return (
                 <li
                   key={blog.id}

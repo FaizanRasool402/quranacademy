@@ -11,6 +11,13 @@ const BG_FALLBACKS = [
   "linear-gradient(145deg, #0f1f4a 0%, #182b68 60%, #0f1f4a 100%)",
 ];
 
+function resolveImageSrc(api: string, imageUrl: string | null) {
+  if (!imageUrl) return null;
+  if (imageUrl.startsWith("data:")) return imageUrl;
+  if (/^https?:\/\//i.test(imageUrl)) return imageUrl;
+  return `${api}${imageUrl}`;
+}
+
 type PublicBlogCard = {
   id: string;
   title: string;
@@ -479,7 +486,7 @@ export default function Blog() {
             <div className="bl-cards">
               {blogs.map((blog, i) => {
                 const api = getApiBase();
-                const img = blog.imageUrl ? `${api}${blog.imageUrl}` : null;
+                const img = resolveImageSrc(api, blog.imageUrl);
                 const bgStyle = img
                   ? { backgroundImage: `url(${img})`, backgroundSize: "cover" as const, backgroundPosition: "center" as const }
                   : { background: BG_FALLBACKS[i % BG_FALLBACKS.length] };
