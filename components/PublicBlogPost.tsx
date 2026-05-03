@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { getApiBase } from "@/lib/apiBase";
-import CTA from "@/components/CTA";
 
 type Post = {
   id: string;
@@ -134,9 +133,6 @@ export default function PublicBlogPost({ id }: { id: string }) {
         )}
       </div>
 
-      <div className="mt-14 sm:mt-16">
-        <CTA />
-      </div>
     </article>
   );
 }

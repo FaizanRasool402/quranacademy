@@ -3,7 +3,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { getApiBase } from "@/lib/apiBase";
-import CTA from "@/components/CTA";
 
 const BG_FALLBACKS = [
   "linear-gradient(145deg, #182b68 0%, #1e3a7a 60%, #182b68 100%)",
@@ -666,10 +665,6 @@ export default function Blog() {
               </button>
             </div>
           ) : null}
-        </div>
-
-        <div className="pb-8 sm:pb-10">
-          <CTA />
         </div>
 
       </div>
