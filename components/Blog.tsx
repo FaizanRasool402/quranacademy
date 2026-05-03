@@ -31,19 +31,41 @@ function formatBlogDate(iso: string) {
   return new Date(iso).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
 }
 
+const BLOGS_PAGE_SIZE = 9;
+
 export default function Blog() {
   const cardRefs = useRef<(HTMLAnchorElement | null)[]>([]);
   const [blogs, setBlogs] = useState<PublicBlogCard[]>([]);
   const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(false);
 
   useEffect(() => {
     const api = getApiBase();
-    fetch(`${api}/api/public/blogs`)
+    setLoading(true);
+    fetch(`${api}/api/public/blogs?page=${page}&limit=${BLOGS_PAGE_SIZE}`)
       .then((r) => r.json())
-      .then((data: PublicBlogCard[]) => setBlogs(Array.isArray(data) ? data : []))
-      .catch(() => setBlogs([]))
+      .then((data: unknown) => {
+        if (Array.isArray(data)) {
+          const start = (page - 1) * BLOGS_PAGE_SIZE;
+          const slice = data.slice(start, start + BLOGS_PAGE_SIZE);
+          setBlogs(slice);
+          setHasMore(start + BLOGS_PAGE_SIZE < data.length);
+          return;
+        }
+        const body = data as {
+          items?: PublicBlogCard[];
+          hasMore?: boolean;
+        };
+        setBlogs(Array.isArray(body.items) ? body.items : []);
+        setHasMore(!!body.hasMore);
+      })
+      .catch(() => {
+        setBlogs([]);
+        setHasMore(false);
+      })
       .finally(() => setLoading(false));
-  }, []);
+  }, [page]);
 
   useEffect(() => {
     if (loading || blogs.length === 0) return;
@@ -432,6 +454,37 @@ export default function Blog() {
           .bl-cards { grid-template-columns: 1fr; }
           .bl-hero-title { font-size: clamp(2.5rem,10vw,4rem); }
         }
+
+        .bl-pager {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          gap: 1rem;
+          margin-top: 2.5rem;
+          flex-wrap: wrap;
+        }
+        .bl-pager-btn {
+          font-family: inherit;
+          font-size: 0.75rem;
+          font-weight: 600;
+          letter-spacing: 0.1em;
+          text-transform: uppercase;
+          padding: 0.75rem 1.5rem;
+          border-radius: 8px;
+          border: 1px solid var(--line);
+          background: #fff;
+          color: var(--blue);
+          cursor: pointer;
+          transition: color 0.2s, border-color 0.2s, background 0.2s;
+        }
+        .bl-pager-btn:hover:not(:disabled) {
+          border-color: var(--blue);
+          color: var(--gold);
+        }
+        .bl-pager-btn:disabled {
+          opacity: 0.45;
+          cursor: not-allowed;
+        }
       `}</style>
 
       <div className="bl">
@@ -490,6 +543,7 @@ export default function Blog() {
                 const bgStyle = img
                   ? { backgroundImage: `url(${img})`, backgroundSize: "cover" as const, backgroundPosition: "center" as const }
                   : { background: BG_FALLBACKS[i % BG_FALLBACKS.length] };
+                const cardIndex = (page - 1) * BLOGS_PAGE_SIZE + i + 1;
                 return (
                   <Link
                     key={blog.id}
@@ -501,7 +555,7 @@ export default function Blog() {
                     <div className="bl-card-visual">
                       <div className="bl-card-visual-bg" style={bgStyle} />
                       <span className="bl-card-arabic" style={{ color: "#fda600" }}>بسم الله</span>
-                      <span className="bl-card-num">{String(i + 1).padStart(2, "0")}</span>
+                      <span className="bl-card-num">{String(cardIndex).padStart(2, "0")}</span>
                     </div>
 
                     <div className="bl-card-body">
@@ -522,6 +576,26 @@ export default function Blog() {
               })}
             </div>
           )}
+          {!loading && blogs.length > 0 && (page > 1 || hasMore) ? (
+            <div className="bl-pager">
+              <button
+                type="button"
+                className="bl-pager-btn"
+                disabled={page <= 1}
+                onClick={() => setPage((p) => Math.max(1, p - 1))}
+              >
+                ← Previous
+              </button>
+              <button
+                type="button"
+                className="bl-pager-btn"
+                disabled={!hasMore}
+                onClick={() => setPage((p) => p + 1)}
+              >
+                Next →
+              </button>
+            </div>
+          ) : null}
         </div>
 
         <div className="pb-8 sm:pb-10">
