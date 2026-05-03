@@ -49,50 +49,82 @@ export default function Blog() {
   useEffect(() => {
     const gen = ++fetchGen.current;
     const ac = new AbortController();
+    let cancelled = false;
 
     setLoading(true);
     setError(null);
 
-    fetch(`${apiBase}/api/public/blogs?page=${page}&limit=${BLOGS_PAGE_SIZE}`, { signal: ac.signal })
-      .then(async (r) => {
-        const payload = await r.json().catch(() => ({}));
-        if (!r.ok) {
-          const msg =
-            typeof (payload as { error?: string }).error === "string"
-              ? (payload as { error: string }).error
-              : `Server error (${r.status})`;
-          throw new Error(msg);
-        }
-        return payload;
-      })
-      .then((data: unknown) => {
-        if (fetchGen.current !== gen) return;
-        if (Array.isArray(data)) {
-          const start = (page - 1) * BLOGS_PAGE_SIZE;
-          const slice = data.slice(start, start + BLOGS_PAGE_SIZE);
-          setBlogs(slice);
-          setHasMore(start + BLOGS_PAGE_SIZE < data.length);
-          return;
-        }
-        const body = data as {
-          items?: PublicBlogCard[];
-          hasMore?: boolean;
-        };
-        setBlogs(Array.isArray(body.items) ? body.items : []);
-        setHasMore(!!body.hasMore);
-      })
-      .catch((e: unknown) => {
-        if (fetchGen.current !== gen) return;
-        if (e instanceof DOMException && e.name === "AbortError") return;
-        setBlogs([]);
-        setHasMore(false);
-        setError(e instanceof Error ? e.message : "Failed to load articles.");
-      })
-      .finally(() => {
-        if (fetchGen.current === gen) setLoading(false);
-      });
+    const url = `${apiBase}/api/public/blogs?page=${page}&limit=${BLOGS_PAGE_SIZE}`;
 
-    return () => ac.abort();
+    function applyPayload(data: unknown) {
+      if (Array.isArray(data)) {
+        const start = (page - 1) * BLOGS_PAGE_SIZE;
+        const slice = data.slice(start, start + BLOGS_PAGE_SIZE);
+        setBlogs(slice);
+        setHasMore(start + BLOGS_PAGE_SIZE < data.length);
+        return;
+      }
+      const body = data as {
+        items?: PublicBlogCard[];
+        hasMore?: boolean;
+      };
+      setBlogs(Array.isArray(body.items) ? body.items : []);
+      setHasMore(!!body.hasMore);
+    }
+
+    (async () => {
+      try {
+        for (let attempt = 0; attempt <= 1; attempt++) {
+          try {
+            const r = await fetch(url, {
+              signal: ac.signal,
+              cache: "no-store",
+            });
+            const payload = await r.json().catch(() => ({}));
+            if (!r.ok) {
+              const msg =
+                typeof (payload as { error?: string }).error === "string"
+                  ? (payload as { error: string }).error
+                  : `Server error (${r.status})`;
+              throw new Error(msg);
+            }
+            if (fetchGen.current !== gen || cancelled) return;
+            applyPayload(payload);
+            return;
+          } catch (e: unknown) {
+            if (cancelled || fetchGen.current !== gen) return;
+            const aborted =
+              (e instanceof DOMException && e.name === "AbortError") ||
+              (e instanceof Error && e.name === "AbortError");
+            if (aborted) return;
+
+            const netRetry = e instanceof TypeError && attempt === 0;
+            if (netRetry) {
+              await new Promise((resolve) => setTimeout(resolve, 450));
+              continue;
+            }
+
+            setBlogs([]);
+            setHasMore(false);
+            const msg =
+              e instanceof Error ? e.message : "Failed to load articles.";
+            setError(
+              msg === "Failed to fetch"
+                ? "Network error — API unreachable or still starting. Try again."
+                : msg
+            );
+            return;
+          }
+        }
+      } finally {
+        if (fetchGen.current === gen && !cancelled) setLoading(false);
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+      ac.abort();
+    };
   }, [page, apiBase, refetchTick]);
 
   useEffect(() => {
