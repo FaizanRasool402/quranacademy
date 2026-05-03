@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { getApiBase } from "@/lib/apiBase";
 
 type Status = "idle" | "loading" | "success" | "error";
 
@@ -20,9 +21,7 @@ export default function ContactClient() {
     setErrorMsg("");
 
     try {
-      const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001";
-
-      const res = await fetch(`${baseUrl}/api/contact`, {
+      const res = await fetch(`${getApiBase()}/api/contact`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

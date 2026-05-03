@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { getApiBase } from "@/lib/apiBase";
 
 const quickLinks = [
   { label: "About Us", href: "/Aboutus" },
@@ -44,9 +45,7 @@ export default function Footer() {
     setQcStatus("loading");
 
     try {
-      const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001";
-
-      const res = await fetch(`${baseUrl}/api/contact`, {
+      const res = await fetch(`${getApiBase()}/api/contact`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
