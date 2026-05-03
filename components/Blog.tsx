@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { getApiBase } from "@/lib/apiBase";
 import CTA from "@/components/CTA";
@@ -25,6 +25,7 @@ type PublicBlogCard = {
   imageUrl: string | null;
   createdAt: string;
   readTime: string;
+  slug?: string | null;
 };
 
 function formatBlogDate(iso: string) {
@@ -35,17 +36,37 @@ const BLOGS_PAGE_SIZE = 9;
 
 export default function Blog() {
   const cardRefs = useRef<(HTMLAnchorElement | null)[]>([]);
+  const fetchGen = useRef(0);
   const [blogs, setBlogs] = useState<PublicBlogCard[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(false);
+  const [refetchTick, setRefetchTick] = useState(0);
+
+  const apiBase = useMemo(() => getApiBase(), []);
 
   useEffect(() => {
-    const api = getApiBase();
+    const gen = ++fetchGen.current;
+    const ac = new AbortController();
+
     setLoading(true);
-    fetch(`${api}/api/public/blogs?page=${page}&limit=${BLOGS_PAGE_SIZE}`)
-      .then((r) => r.json())
+    setError(null);
+
+    fetch(`${apiBase}/api/public/blogs?page=${page}&limit=${BLOGS_PAGE_SIZE}`, { signal: ac.signal })
+      .then(async (r) => {
+        const payload = await r.json().catch(() => ({}));
+        if (!r.ok) {
+          const msg =
+            typeof (payload as { error?: string }).error === "string"
+              ? (payload as { error: string }).error
+              : `Server error (${r.status})`;
+          throw new Error(msg);
+        }
+        return payload;
+      })
       .then((data: unknown) => {
+        if (fetchGen.current !== gen) return;
         if (Array.isArray(data)) {
           const start = (page - 1) * BLOGS_PAGE_SIZE;
           const slice = data.slice(start, start + BLOGS_PAGE_SIZE);
@@ -60,12 +81,19 @@ export default function Blog() {
         setBlogs(Array.isArray(body.items) ? body.items : []);
         setHasMore(!!body.hasMore);
       })
-      .catch(() => {
+      .catch((e: unknown) => {
+        if (fetchGen.current !== gen) return;
+        if (e instanceof DOMException && e.name === "AbortError") return;
         setBlogs([]);
         setHasMore(false);
+        setError(e instanceof Error ? e.message : "Failed to load articles.");
       })
-      .finally(() => setLoading(false));
-  }, [page]);
+      .finally(() => {
+        if (fetchGen.current === gen) setLoading(false);
+      });
+
+    return () => ac.abort();
+  }, [page, apiBase, refetchTick]);
 
   useEffect(() => {
     if (loading || blogs.length === 0) return;
@@ -531,6 +559,17 @@ export default function Blog() {
         <div className="bl-section">
           {loading ? (
             <p className="text-center text-gray-500 py-12">Loading articles…</p>
+          ) : error ? (
+            <div className="text-center py-12 max-w-md mx-auto space-y-3">
+              <p className="text-red-600 text-sm font-medium">{error}</p>
+              <button
+                type="button"
+                className="text-sm font-semibold text-[#182b68] underline underline-offset-2 hover:text-[#fda600]"
+                onClick={() => setRefetchTick((t) => t + 1)}
+              >
+                Try again
+              </button>
+            </div>
           ) : blogs.length === 0 ? (
             <p className="text-center text-gray-500 py-12 max-w-md mx-auto">
               No published articles yet. When an admin publishes a post from the dashboard, it will appear here.
@@ -538,8 +577,7 @@ export default function Blog() {
           ) : (
             <div className="bl-cards">
               {blogs.map((blog, i) => {
-                const api = getApiBase();
-                const img = resolveImageSrc(api, blog.imageUrl);
+                const img = resolveImageSrc(apiBase, blog.imageUrl);
                 const bgStyle = img
                   ? { backgroundImage: `url(${img})`, backgroundSize: "cover" as const, backgroundPosition: "center" as const }
                   : { background: BG_FALLBACKS[i % BG_FALLBACKS.length] };
