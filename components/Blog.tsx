@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { getApiBase } from "@/lib/apiBase";
 
@@ -17,7 +17,7 @@ function resolveImageSrc(api: string, imageUrl: string | null) {
   return `${api}${imageUrl}`;
 }
 
-type PublicBlogCard = {
+export type PublicBlogCard = {
   id: string;
   title: string;
   excerpt: string;
@@ -32,81 +32,132 @@ function formatBlogDate(iso: string) {
 }
 
 const BLOGS_PAGE_SIZE = 9;
+const SS_CACHE_KEY = "aqa:blogs:page1";
+const SS_CACHE_TTL_MS = 60 * 1000;
 
-export default function Blog() {
+type CachedPage1 = { items: PublicBlogCard[]; hasMore: boolean; ts: number };
+
+function readPage1Cache(): CachedPage1 | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const raw = window.sessionStorage.getItem(SS_CACHE_KEY);
+    if (!raw) return null;
+    const p = JSON.parse(raw) as CachedPage1;
+    if (!p || typeof p.ts !== "number") return null;
+    if (Date.now() - p.ts > SS_CACHE_TTL_MS) return null;
+    return p;
+  } catch {
+    return null;
+  }
+}
+
+function writePage1Cache(items: PublicBlogCard[], hasMore: boolean) {
+  if (typeof window === "undefined") return;
+  try {
+    window.sessionStorage.setItem(
+      SS_CACHE_KEY,
+      JSON.stringify({ items, hasMore, ts: Date.now() } satisfies CachedPage1)
+    );
+  } catch { /* quota exceeded */ }
+}
+
+type BlogProps = {
+  initialItems?: PublicBlogCard[];
+  initialHasMore?: boolean;
+};
+
+export default function Blog({
+  initialItems = [],
+  initialHasMore = false,
+}: BlogProps) {
   const cardRefs = useRef<(HTMLAnchorElement | null)[]>([]);
   const fetchGen = useRef(0);
-  const [blogs, setBlogs] = useState<PublicBlogCard[]>([]);
-  const [loading, setLoading] = useState(true);
+  const hasInitial = initialItems.length > 0;
+
+  const [blogs, setBlogs] = useState<PublicBlogCard[]>(initialItems);
+  const [loading, setLoading] = useState(!hasInitial);
+  const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [page, setPage] = useState(1);
-  const [hasMore, setHasMore] = useState(false);
+  const [hasMore, setHasMore] = useState(initialHasMore);
+  const [nextPage, setNextPage] = useState(2);
   const [refetchTick, setRefetchTick] = useState(0);
+  const skipFirstFetchRef = useRef(hasInitial);
 
   const apiBase = useMemo(() => getApiBase(), []);
 
+  /* ─── Initial page-1 load ─────────────────────────────────────────── */
   useEffect(() => {
+    if (skipFirstFetchRef.current && refetchTick === 0) {
+      skipFirstFetchRef.current = false;
+      return;
+    }
+
     const gen = ++fetchGen.current;
     const ac = new AbortController();
     let cancelled = false;
 
+    // Session cache hit — no network needed
+    const cached = readPage1Cache();
+    if (cached && refetchTick === 0) {
+      setBlogs(cached.items);
+      setHasMore(cached.hasMore);
+      setNextPage(2);
+      setLoading(false);
+      setError(null);
+      return () => { cancelled = true; ac.abort(); };
+    }
+
     setLoading(true);
     setError(null);
 
-    const url = `${apiBase}/api/public/blogs?page=${page}&limit=${BLOGS_PAGE_SIZE}`;
-
-    function applyPayload(data: unknown) {
-      if (Array.isArray(data)) {
-        const start = (page - 1) * BLOGS_PAGE_SIZE;
-        const slice = data.slice(start, start + BLOGS_PAGE_SIZE);
-        setBlogs(slice);
-        setHasMore(start + BLOGS_PAGE_SIZE < data.length);
-        return;
-      }
-      const body = data as {
-        items?: PublicBlogCard[];
-        hasMore?: boolean;
-      };
-      setBlogs(Array.isArray(body.items) ? body.items : []);
-      setHasMore(!!body.hasMore);
-    }
+    const url = `${apiBase}/api/public/blogs?page=1&limit=${BLOGS_PAGE_SIZE}`;
+    const timeoutId = setTimeout(() => ac.abort(), 8000);
 
     (async () => {
       try {
         for (let attempt = 0; attempt <= 1; attempt++) {
           try {
-            const r = await fetch(url, {
-              signal: ac.signal,
-              cache: "no-store",
-            });
+            const r = await fetch(url, { signal: ac.signal });
             const payload = await r.json().catch(() => ({}));
             if (!r.ok) {
-              const msg =
-                typeof (payload as { error?: string }).error === "string"
-                  ? (payload as { error: string }).error
-                  : `Server error (${r.status})`;
+              const msg = (payload as { error?: string }).error || `Server error (${r.status})`;
               throw new Error(msg);
             }
             if (fetchGen.current !== gen || cancelled) return;
-            applyPayload(payload);
+
+            const data = payload as { items?: PublicBlogCard[]; hasMore?: boolean } | PublicBlogCard[];
+            let items: PublicBlogCard[];
+            let more: boolean;
+            if (Array.isArray(data)) {
+              items = data.slice(0, BLOGS_PAGE_SIZE);
+              more = data.length > BLOGS_PAGE_SIZE;
+            } else {
+              items = Array.isArray(data.items) ? data.items : [];
+              more = !!data.hasMore;
+            }
+            setBlogs(items);
+            setHasMore(more);
+            setNextPage(2);
+            writePage1Cache(items, more);
             return;
           } catch (e: unknown) {
             if (cancelled || fetchGen.current !== gen) return;
-            const aborted =
+            const isAbort =
               (e instanceof DOMException && e.name === "AbortError") ||
               (e instanceof Error && e.name === "AbortError");
-            if (aborted) return;
-
-            const netRetry = e instanceof TypeError && attempt === 0;
-            if (netRetry) {
-              await new Promise((resolve) => setTimeout(resolve, 450));
-              continue;
+            if (isAbort || (e instanceof TypeError && attempt === 0)) {
+              if (attempt === 0) {
+                await new Promise((r) => setTimeout(r, 600));
+                continue;
+              }
+              setError("Network slow — server start ho raha hai, dobara try karein.");
+              setBlogs([]);
+              setHasMore(false);
+              return;
             }
-
             setBlogs([]);
             setHasMore(false);
-            const msg =
-              e instanceof Error ? e.message : "Failed to load articles.";
+            const msg = e instanceof Error ? e.message : "Failed to load articles.";
             setError(
               msg === "Failed to fetch"
                 ? "Network error — API unreachable or still starting. Try again."
@@ -116,16 +167,40 @@ export default function Blog() {
           }
         }
       } finally {
+        clearTimeout(timeoutId);
         if (fetchGen.current === gen && !cancelled) setLoading(false);
       }
     })();
 
-    return () => {
-      cancelled = true;
-      ac.abort();
-    };
-  }, [page, apiBase, refetchTick]);
+    return () => { cancelled = true; clearTimeout(timeoutId); ac.abort(); };
+  }, [apiBase, refetchTick]);
 
+  /* ─── Load More ──────────────────────────────────────────────────── */
+  const handleLoadMore = useCallback(async () => {
+    if (loadingMore || !hasMore) return;
+    setLoadingMore(true);
+    const ac = new AbortController();
+    const timeoutId = setTimeout(() => ac.abort(), 8000);
+    try {
+      const url = `${apiBase}/api/public/blogs?page=${nextPage}&limit=${BLOGS_PAGE_SIZE}`;
+      const r = await fetch(url, { signal: ac.signal });
+      const payload = await r.json().catch(() => ({}));
+      if (!r.ok) throw new Error((payload as { error?: string }).error || "Failed");
+      const data = payload as { items?: PublicBlogCard[]; hasMore?: boolean };
+      const items = Array.isArray(data.items) ? data.items : [];
+      const more = !!data.hasMore;
+      setBlogs((prev) => [...prev, ...items]);
+      setHasMore(more);
+      setNextPage((p) => p + 1);
+    } catch {
+      /* silently ignore — user can try again */
+    } finally {
+      clearTimeout(timeoutId);
+      setLoadingMore(false);
+    }
+  }, [loadingMore, hasMore, nextPage, apiBase]);
+
+  /* ─── Scroll-in animation for newly added cards ───────────────────── */
   useEffect(() => {
     if (loading || blogs.length === 0) return;
     const io = new IntersectionObserver(
@@ -364,7 +439,12 @@ export default function Blog() {
         }
         .bl-card-visual-bg {
           position: absolute; inset: 0;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          object-position: center;
           transition: transform 0.5s ease;
+          display: block;
         }
         .bl-card:hover .bl-card-visual-bg {
           transform: scale(1.06);
@@ -514,35 +594,47 @@ export default function Blog() {
           .bl-hero-title { font-size: clamp(2.5rem,10vw,4rem); }
         }
 
-        .bl-pager {
+        .bl-loadmore {
           display: flex;
           justify-content: center;
-          align-items: center;
-          gap: 1rem;
-          margin-top: 2.5rem;
-          flex-wrap: wrap;
+          margin-top: 3rem;
         }
-        .bl-pager-btn {
+        .bl-loadmore-btn {
           font-family: inherit;
-          font-size: 0.75rem;
-          font-weight: 600;
-          letter-spacing: 0.1em;
+          font-size: 0.8rem;
+          font-weight: 700;
+          letter-spacing: 0.12em;
           text-transform: uppercase;
-          padding: 0.75rem 1.5rem;
-          border-radius: 8px;
-          border: 1px solid var(--line);
-          background: #fff;
+          padding: 0.9rem 2.5rem;
+          border-radius: 50px;
+          border: 2px solid var(--blue);
+          background: transparent;
           color: var(--blue);
           cursor: pointer;
-          transition: color 0.2s, border-color 0.2s, background 0.2s;
+          display: inline-flex;
+          align-items: center;
+          gap: 0.6rem;
+          transition: background 0.22s, color 0.22s, border-color 0.22s, transform 0.18s;
         }
-        .bl-pager-btn:hover:not(:disabled) {
-          border-color: var(--blue);
-          color: var(--gold);
+        .bl-loadmore-btn:hover:not(:disabled) {
+          background: var(--blue);
+          color: #fff;
+          transform: translateY(-2px);
         }
-        .bl-pager-btn:disabled {
-          opacity: 0.45;
+        .bl-loadmore-btn:disabled {
+          opacity: 0.55;
           cursor: not-allowed;
+        }
+        .bl-loadmore-spin {
+          width: 14px;
+          height: 14px;
+          border: 2px solid currentColor;
+          border-top-color: transparent;
+          border-radius: 50%;
+          animation: bl-spin 0.7s linear infinite;
+        }
+        @keyframes bl-spin {
+          to { transform: rotate(360deg); }
         }
       `}</style>
 
@@ -609,10 +701,12 @@ export default function Blog() {
             <div className="bl-cards">
               {blogs.map((blog, i) => {
                 const img = resolveImageSrc(apiBase, blog.imageUrl);
-                const bgStyle = img
-                  ? { backgroundImage: `url(${img})`, backgroundSize: "cover" as const, backgroundPosition: "center" as const }
+                const bgFallbackStyle = img
+                  ? undefined
                   : { background: BG_FALLBACKS[i % BG_FALLBACKS.length] };
-                const cardIndex = (page - 1) * BLOGS_PAGE_SIZE + i + 1;
+                const cardIndex = i + 1;
+                // Pehli row eager (LCP), baqi lazy
+                const isAboveFold = i < 3;
                 return (
                   <Link
                     key={blog.id}
@@ -620,9 +714,24 @@ export default function Blog() {
                     className="bl-card"
                     ref={(el) => { cardRefs.current[i] = el; }}
                     style={{ transitionDelay: `${i * 0.12}s` }}
+                    prefetch={isAboveFold}
                   >
                     <div className="bl-card-visual">
-                      <div className="bl-card-visual-bg" style={bgStyle} />
+                      {img ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img
+                          src={img}
+                          alt={blog.title}
+                          className="bl-card-visual-bg"
+                          loading={isAboveFold ? "eager" : "lazy"}
+                          decoding="async"
+                          fetchPriority={isAboveFold ? "high" : "low"}
+                          width={600}
+                          height={400}
+                        />
+                      ) : (
+                        <div className="bl-card-visual-bg" style={bgFallbackStyle} />
+                      )}
                       <span className="bl-card-arabic" style={{ color: "#fda600" }}>بسم الله</span>
                       <span className="bl-card-num">{String(cardIndex).padStart(2, "0")}</span>
                     </div>
@@ -645,23 +754,22 @@ export default function Blog() {
               })}
             </div>
           )}
-          {!loading && blogs.length > 0 && (page > 1 || hasMore) ? (
-            <div className="bl-pager">
+          {!loading && hasMore ? (
+            <div className="bl-loadmore">
               <button
                 type="button"
-                className="bl-pager-btn"
-                disabled={page <= 1}
-                onClick={() => setPage((p) => Math.max(1, p - 1))}
+                className="bl-loadmore-btn"
+                disabled={loadingMore}
+                onClick={handleLoadMore}
               >
-                ← Previous
-              </button>
-              <button
-                type="button"
-                className="bl-pager-btn"
-                disabled={!hasMore}
-                onClick={() => setPage((p) => p + 1)}
-              >
-                Next →
+                {loadingMore ? (
+                  <>
+                    <span className="bl-loadmore-spin" />
+                    Loading…
+                  </>
+                ) : (
+                  "Load More Articles ↓"
+                )}
               </button>
             </div>
           ) : null}

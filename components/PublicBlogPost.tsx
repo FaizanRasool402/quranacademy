@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { getApiBase } from "@/lib/apiBase";
 
-type Post = {
+export type Post = {
   id: string;
   mainHeading: string;
   introContent: string;
@@ -22,15 +22,28 @@ function resolveImageSrc(api: string, imageUrl: string | null) {
   return `${api}${imageUrl}`;
 }
 
-export default function PublicBlogPost({ id }: { id: string }) {
-  const [post, setPost] = useState<Post | null>(null);
+type Props = {
+  id: string;
+  initialPost?: Post | null;
+};
+
+export default function PublicBlogPost({ id, initialPost = null }: Props) {
+  const [post, setPost] = useState<Post | null>(initialPost);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    // Agar SSR ne post de diya hai to client se dobara fetch nahi karna
+    if (initialPost) return;
+
     let cancelled = false;
+    const ac = new AbortController();
+    const timeoutId = setTimeout(() => ac.abort(), 8000);
+
     (async () => {
       try {
-        const res = await fetch(`${getApiBase()}/api/public/blogs/${id}`);
+        const res = await fetch(`${getApiBase()}/api/public/blogs/${id}`, {
+          signal: ac.signal,
+        });
         if (!res.ok) {
           const j = await res.json().catch(() => ({}));
           throw new Error((j as { error?: string }).error || "Not found");
@@ -38,13 +51,25 @@ export default function PublicBlogPost({ id }: { id: string }) {
         const data = (await res.json()) as Post;
         if (!cancelled) setPost(data);
       } catch (e) {
-        if (!cancelled) setError(e instanceof Error ? e.message : "Error");
+        if (cancelled) return;
+        const aborted =
+          (e instanceof DOMException && e.name === "AbortError") ||
+          (e instanceof Error && e.name === "AbortError");
+        if (aborted) {
+          setError("Network slow — dobara try karein.");
+          return;
+        }
+        setError(e instanceof Error ? e.message : "Error");
+      } finally {
+        clearTimeout(timeoutId);
       }
     })();
     return () => {
       cancelled = true;
+      clearTimeout(timeoutId);
+      ac.abort();
     };
-  }, [id]);
+  }, [id, initialPost]);
 
   const api = getApiBase();
   const img = resolveImageSrc(api, post?.imageUrl || null);
@@ -99,6 +124,11 @@ export default function PublicBlogPost({ id }: { id: string }) {
               src={img}
               alt={post.imageAltText || post.mainHeading}
               className="h-full w-full object-cover object-center"
+              loading="eager"
+              decoding="async"
+              fetchPriority="high"
+              width={1280}
+              height={720}
             />
           </div>
         </div>

@@ -3,11 +3,22 @@ import dynamic from "next/dynamic";
 import { Amiri, Raleway } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
+import { getApiBase } from "@/lib/apiBase";
 
 const CTA = dynamic(() => import("@/components/CTA"));
 const Footer = dynamic(() => import("@/components/Footer"));
 const WhatsAppButton = dynamic(() => import("@/components/WhatsAppButton"));
 const AdmissionPopup = dynamic(() => import("@/components/AdmissionPopup"));
+
+/** Browser ko bata dein API origin se early connection bana le — DNS/TLS handshake parallel mein hojaye */
+function getApiOrigin(): string | null {
+  try {
+    const u = new URL(getApiBase());
+    return u.origin;
+  } catch {
+    return null;
+  }
+}
 
 const raleway = Raleway({
   weight: ["400", "500", "600", "700"],
@@ -66,8 +77,17 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const apiOrigin = getApiOrigin();
   return (
     <html lang="en" className={`${raleway.variable} ${amiri.variable} font-sans bg-white`}>
+      <head>
+        {apiOrigin ? (
+          <>
+            <link rel="preconnect" href={apiOrigin} crossOrigin="anonymous" />
+            <link rel="dns-prefetch" href={apiOrigin} />
+          </>
+        ) : null}
+      </head>
       <body className="font-sans antialiased bg-white text-[#171717]">
         <Navbar />
         {children}
