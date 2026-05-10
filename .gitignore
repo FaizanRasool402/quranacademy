@@ -33,6 +33,8 @@ yarn-error.log*
 # env files (can opt-in for committing if needed)
 .env*
 !.env.example
+# .env.production has no secrets — only public API URL, safe to commit
+!.env.production
 
 # vercel
 .vercel
