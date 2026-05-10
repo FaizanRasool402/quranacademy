@@ -33,7 +33,7 @@ function formatBlogDate(iso: string) {
 
 const BLOGS_PAGE_SIZE = 9;
 const SS_CACHE_KEY = "aqa:blogs:page1";
-const SS_CACHE_TTL_MS = 60 * 1000;
+const SS_CACHE_TTL_MS = 20 * 1000;
 
 type CachedPage1 = { items: PublicBlogCard[]; hasMore: boolean; ts: number };
 
@@ -75,30 +75,24 @@ export default function Blog({
   const hasInitial = initialItems.length > 0;
 
   const [blogs, setBlogs] = useState<PublicBlogCard[]>(initialItems);
-  const [loading, setLoading] = useState(!hasInitial);
+  const [loading, setLoading] = useState(false);
   const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [hasMore, setHasMore] = useState(initialHasMore);
   const [nextPage, setNextPage] = useState(2);
   const [refetchTick, setRefetchTick] = useState(0);
-  const skipFirstFetchRef = useRef(hasInitial);
 
   const apiBase = useMemo(() => getApiBase(), []);
 
   /* ─── Initial page-1 load ─────────────────────────────────────────── */
   useEffect(() => {
-    if (skipFirstFetchRef.current && refetchTick === 0) {
-      skipFirstFetchRef.current = false;
-      return;
-    }
-
     const gen = ++fetchGen.current;
     const ac = new AbortController();
     let cancelled = false;
 
-    // Session cache hit — no network needed
+    // Session cache hit sirf tab use ho jab koi initial SSR data na ho
     const cached = readPage1Cache();
-    if (cached && refetchTick === 0) {
+    if (cached && refetchTick === 0 && !hasInitial) {
       setBlogs(cached.items);
       setHasMore(cached.hasMore);
       setNextPage(2);
@@ -107,7 +101,8 @@ export default function Blog({
       return () => { cancelled = true; ac.abort(); };
     }
 
-    setLoading(true);
+    // Background mein fresh data fetch karo — agar initialItems hain to spinner mat dikhao
+    if (!hasInitial) setLoading(true);
     setError(null);
 
     const url = `${apiBase}/api/public/blogs?page=1&limit=${BLOGS_PAGE_SIZE}`;

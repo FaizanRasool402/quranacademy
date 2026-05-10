@@ -14,7 +14,7 @@ export const metadata: Metadata = {
  * Pehla load HTML me already blogs ke saath aata hai, isliye user ko spinner
  * dikhne ke bajaye seedha cards visible hote hain.
  */
-export const revalidate = 60;
+export const revalidate = 30;
 
 const BLOGS_PAGE_SIZE = 9;
 
