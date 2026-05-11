@@ -87,7 +87,6 @@ export default function Blog({
   /* ─── Initial page-1 load ─────────────────────────────────────────── */
   useEffect(() => {
     const gen = ++fetchGen.current;
-    const ac = new AbortController();
     let cancelled = false;
 
     // Session cache hit sirf tab use ho jab koi initial SSR data na ho
@@ -98,7 +97,7 @@ export default function Blog({
       setNextPage(2);
       setLoading(false);
       setError(null);
-      return () => { cancelled = true; ac.abort(); };
+      return () => { cancelled = true; };
     }
 
     // Background mein fresh data fetch karo — agar initialItems hain to spinner mat dikhao
@@ -106,68 +105,89 @@ export default function Blog({
     setError(null);
 
     const url = `${apiBase}/api/public/blogs?page=1&limit=${BLOGS_PAGE_SIZE}`;
-    const timeoutId = setTimeout(() => ac.abort(), 8000);
+    // 4 attempts: immediate, then 2s, 4s, 8s delays between retries
+    const RETRY_DELAYS = [0, 2000, 4000, 8000];
+    const MAX_ATTEMPTS = 4;
 
     (async () => {
-      try {
-        for (let attempt = 0; attempt <= 1; attempt++) {
-          try {
-            const r = await fetch(url, { signal: ac.signal });
-            const payload = await r.json().catch(() => ({}));
-            if (!r.ok) {
-              const msg = (payload as { error?: string }).error || `Server error (${r.status})`;
-              throw new Error(msg);
-            }
-            if (fetchGen.current !== gen || cancelled) return;
+      for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
+        if (cancelled || fetchGen.current !== gen) return;
 
-            const data = payload as { items?: PublicBlogCard[]; hasMore?: boolean } | PublicBlogCard[];
-            let items: PublicBlogCard[];
-            let more: boolean;
-            if (Array.isArray(data)) {
-              items = data.slice(0, BLOGS_PAGE_SIZE);
-              more = data.length > BLOGS_PAGE_SIZE;
-            } else {
-              items = Array.isArray(data.items) ? data.items : [];
-              more = !!data.hasMore;
-            }
-            setBlogs(items);
-            setHasMore(more);
-            setNextPage(2);
-            writePage1Cache(items, more);
-            return;
-          } catch (e: unknown) {
-            if (cancelled || fetchGen.current !== gen) return;
-            const isAbort =
-              (e instanceof DOMException && e.name === "AbortError") ||
-              (e instanceof Error && e.name === "AbortError");
-            if (isAbort || (e instanceof TypeError && attempt === 0)) {
-              if (attempt === 0) {
-                await new Promise((r) => setTimeout(r, 600));
-                continue;
-              }
-              setError("Network slow — server start ho raha hai, dobara try karein.");
+        if (attempt > 0) {
+          await new Promise((r) => setTimeout(r, RETRY_DELAYS[attempt]));
+          if (cancelled || fetchGen.current !== gen) return;
+        }
+
+        // Per-attempt AbortController with 10s timeout
+        const ac = new AbortController();
+        const timeoutId = setTimeout(() => ac.abort(), 10000);
+
+        try {
+          const r = await fetch(url, { signal: ac.signal });
+          clearTimeout(timeoutId);
+          const payload = await r.json().catch(() => ({}));
+
+          if (!r.ok) {
+            const msg = (payload as { error?: string }).error || `Server error (${r.status})`;
+            // Non-network server error — no point retrying
+            if (fetchGen.current === gen && !cancelled) {
+              setError(msg);
               setBlogs([]);
               setHasMore(false);
-              return;
+              setLoading(false);
             }
-            setBlogs([]);
-            setHasMore(false);
-            const msg = e instanceof Error ? e.message : "Failed to load articles.";
-            setError(
-              msg === "Failed to fetch"
-                ? "Network error — API unreachable or still starting. Try again."
-                : msg
-            );
             return;
           }
+
+          if (fetchGen.current !== gen || cancelled) return;
+
+          const data = payload as { items?: PublicBlogCard[]; hasMore?: boolean } | PublicBlogCard[];
+          let items: PublicBlogCard[];
+          let more: boolean;
+          if (Array.isArray(data)) {
+            items = data.slice(0, BLOGS_PAGE_SIZE);
+            more = data.length > BLOGS_PAGE_SIZE;
+          } else {
+            items = Array.isArray(data.items) ? data.items : [];
+            more = !!data.hasMore;
+          }
+          setBlogs(items);
+          setHasMore(more);
+          setNextPage(2);
+          setLoading(false);
+          writePage1Cache(items, more);
+          return; // success
+
+        } catch (e: unknown) {
+          clearTimeout(timeoutId);
+          if (cancelled || fetchGen.current !== gen) return;
+
+          const isNetworkOrTimeout =
+            (e instanceof DOMException && e.name === "AbortError") ||
+            (e instanceof Error && (e.name === "AbortError" || e.message === "Failed to fetch"));
+
+          if (!isNetworkOrTimeout) {
+            // Unexpected error — don't retry
+            const msg = e instanceof Error ? e.message : "Failed to load articles.";
+            setError(msg);
+            setBlogs([]);
+            setHasMore(false);
+            setLoading(false);
+            return;
+          }
+
+          // Network / timeout — retry if attempts remain, otherwise show error
+          if (attempt < MAX_ATTEMPTS - 1) continue;
+
+          setError("Unable to load blogs. Please check your connection and try again.");
+          setBlogs([]);
+          setHasMore(false);
+          setLoading(false);
         }
-      } finally {
-        clearTimeout(timeoutId);
-        if (fetchGen.current === gen && !cancelled) setLoading(false);
       }
     })();
 
-    return () => { cancelled = true; clearTimeout(timeoutId); ac.abort(); };
+    return () => { cancelled = true; };
   }, [apiBase, refetchTick]);
 
   /* ─── Load More ──────────────────────────────────────────────────── */
@@ -631,6 +651,37 @@ export default function Blog({
         @keyframes bl-spin {
           to { transform: rotate(360deg); }
         }
+
+        /* ══ SKELETON ══ */
+        .bl-skeleton {
+          border-radius: 12px;
+          overflow: hidden;
+          background: #fff;
+          box-shadow: 0 4px 20px rgba(24,43,104,0.08);
+          border: 1px solid var(--line);
+        }
+        .bl-skeleton-img {
+          height: 200px;
+          background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+          background-size: 200% 100%;
+          animation: bl-shimmer 1.4s infinite;
+        }
+        .bl-skeleton-body {
+          padding: 1.5rem;
+          display: flex;
+          flex-direction: column;
+          gap: 0.75rem;
+        }
+        .bl-skeleton-line {
+          border-radius: 6px;
+          background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+          background-size: 200% 100%;
+          animation: bl-shimmer 1.4s infinite;
+        }
+        @keyframes bl-shimmer {
+          0%   { background-position: 200% 0; }
+          100% { background-position: -200% 0; }
+        }
       `}</style>
 
       <div className="bl">
@@ -676,7 +727,22 @@ export default function Blog({
         {/* ══ CARDS (published posts from database) ══ */}
         <div className="bl-section">
           {loading ? (
-            <p className="text-center text-gray-500 py-12">Loading articles…</p>
+            <div className="bl-cards">
+              {[1, 2, 3].map((i) => (
+                <div key={i} className="bl-skeleton">
+                  <div className="bl-skeleton-img" />
+                  <div className="bl-skeleton-body">
+                    <div className="bl-skeleton-line" style={{ height: "12px", width: "45%" }} />
+                    <div className="bl-skeleton-line" style={{ height: "20px", width: "85%" }} />
+                    <div className="bl-skeleton-line" style={{ height: "14px", width: "100%" }} />
+                    <div className="bl-skeleton-line" style={{ height: "14px", width: "70%" }} />
+                    <div style={{ paddingTop: "0.85rem", borderTop: "1px solid rgba(24,43,104,0.1)", marginTop: "0.5rem" }}>
+                      <div className="bl-skeleton-line" style={{ height: "12px", width: "30%" }} />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
           ) : error ? (
             <div className="text-center py-12 max-w-md mx-auto space-y-3">
               <p className="text-red-600 text-sm font-medium">{error}</p>

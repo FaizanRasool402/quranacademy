@@ -21,6 +21,7 @@ export default function AddBlog() {
   const [conclusion, setConclusion] = useState("");
 
   const [submitting, setSubmitting] = useState(false);
+  const [uploadStatus, setUploadStatus] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
 
@@ -31,10 +32,29 @@ export default function AddBlog() {
     setImagePreview(file ? URL.createObjectURL(file) : null);
   };
 
+  const buildFormData = () => {
+    const fd = new FormData();
+    fd.append("mainHeading", mainHeading.trim());
+    fd.append("imageAltText", imageAltText.trim());
+    fd.append("introContent", introContent.trim());
+    fd.append(
+      "subheadings",
+      JSON.stringify(
+        subheadings
+          .map((item) => ({ title: item.title.trim(), content: item.content.trim() }))
+          .filter((item) => item.title || item.content)
+      )
+    );
+    fd.append("conclusion", conclusion.trim());
+    if (imageFile) fd.append("featuredImage", imageFile);
+    return fd;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
     setSuccess(null);
+    setUploadStatus("");
 
     if (!mainHeading.trim()) {
       setError("Please enter a main heading.");
@@ -42,39 +62,65 @@ export default function AddBlog() {
     }
 
     setSubmitting(true);
-    try {
-      const fd = new FormData();
-      fd.append("mainHeading", mainHeading.trim());
-      fd.append("imageAltText", imageAltText.trim());
-      fd.append("introContent", introContent.trim());
-      fd.append(
-        "subheadings",
-        JSON.stringify(
-          subheadings
-            .map((item) => ({ title: item.title.trim(), content: item.content.trim() }))
-            .filter((item) => item.title || item.content)
-        )
-      );
-      fd.append("conclusion", conclusion.trim());
-      if (imageFile) fd.append("featuredImage", imageFile);
 
-      const res = await fetch(`${getApiBase()}/api/blogs`, {
-        method: "POST",
-        body: fd,
-      });
+    const MAX_ATTEMPTS = 4;
+    const RETRY_DELAYS = [0, 3000, 6000, 10000];
 
-      const data = (await res.json().catch(() => ({}))) as { error?: string };
-
-      if (!res.ok) {
-        throw new Error(data.error || "Could not save blog. Try again.");
+    for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
+      if (attempt > 0) {
+        setUploadStatus(`Server starting up… retrying (${attempt + 1}/${MAX_ATTEMPTS})`);
+        await new Promise((r) => setTimeout(r, RETRY_DELAYS[attempt]));
+      } else {
+        setUploadStatus("Uploading…");
       }
 
-      setSuccess("Blog saved to database.");
-      setTimeout(() => router.push("/admin/dashboard"), 1200);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Something went wrong.");
-    } finally {
-      setSubmitting(false);
+      const ac = new AbortController();
+      const timeoutId = setTimeout(() => ac.abort(), 30000);
+
+      try {
+        const res = await fetch(`${getApiBase()}/api/blogs`, {
+          method: "POST",
+          body: buildFormData(),
+          signal: ac.signal,
+        });
+        clearTimeout(timeoutId);
+
+        const data = (await res.json().catch(() => ({}))) as { error?: string };
+
+        if (!res.ok) {
+          // Server returned an error — no point retrying
+          setError(data.error || "Could not save blog. Try again.");
+          setUploadStatus("");
+          setSubmitting(false);
+          return;
+        }
+
+        setUploadStatus("");
+        setSuccess("Blog saved successfully!");
+        setSubmitting(false);
+        setTimeout(() => router.push("/admin/dashboard"), 1200);
+        return;
+
+      } catch (err: unknown) {
+        clearTimeout(timeoutId);
+
+        const isNetworkOrTimeout =
+          (err instanceof DOMException && err.name === "AbortError") ||
+          (err instanceof Error && (err.name === "AbortError" || err.message === "Failed to fetch"));
+
+        if (!isNetworkOrTimeout) {
+          setError(err instanceof Error ? err.message : "Something went wrong.");
+          setUploadStatus("");
+          setSubmitting(false);
+          return;
+        }
+
+        if (attempt < MAX_ATTEMPTS - 1) continue;
+
+        setError("Upload failed — server did not respond after multiple attempts. Please try again.");
+        setUploadStatus("");
+        setSubmitting(false);
+      }
     }
   };
 
@@ -266,14 +312,25 @@ export default function AddBlog() {
             />
           </div>
 
-          <div className="flex flex-wrap gap-3 pt-2">
+          <div className="flex flex-wrap items-center gap-4 pt-2">
             <button
               type="submit"
               disabled={submitting}
               className="rounded-xl bg-[#182b68] px-8 py-3 text-sm font-semibold text-white shadow-md transition hover:bg-[#1e3a7a] disabled:opacity-60 disabled:pointer-events-none"
             >
-              {submitting ? "Adding…" : "Add"}
+              {submitting ? (
+                <span className="flex items-center gap-2">
+                  <svg className="w-4 h-4 animate-spin" viewBox="0 0 24 24" fill="none">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
+                  </svg>
+                  Adding…
+                </span>
+              ) : "Add"}
             </button>
+            {submitting && uploadStatus && (
+              <p className="text-sm text-[#182b68] font-medium">{uploadStatus}</p>
+            )}
           </div>
         </form>
       </div>

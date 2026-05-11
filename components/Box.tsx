@@ -83,7 +83,6 @@ export default function Box() {
               alt="Background"
               fill
               className="object-cover"
-              priority
             />
           </div>
 

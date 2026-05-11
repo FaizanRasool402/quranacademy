@@ -30,7 +30,7 @@ async function fetchInitialBlogs(): Promise<InitialPayload> {
 
   try {
     const ac = new AbortController();
-    const timeout = setTimeout(() => ac.abort(), 6000);
+    const timeout = setTimeout(() => ac.abort(), 15000);
     const r = await fetch(url, {
       signal: ac.signal,
       next: { revalidate: 60 },

@@ -67,7 +67,6 @@ const nextConfig: NextConfig = {
       dynamic: 0,
       static: 30,
     },
-    optimizeCss: true,
   },
   expireTime: 0,
 };
